@@ -1081,18 +1081,18 @@
                     const img = new Image();
                     img.onload = () => {
                         backgroundImage = img;
-                        // Resize canvas to match original image dimensions
+                        // Resize canvas to match original image dimensions EXACTLY
                         canvas.width = img.naturalWidth;
                         canvas.height = img.naturalHeight;
                         
-                        // Set avatar to absolute center position: (50.17%, 72.16%)
+                        // Set avatar to absolute center position in pixels: (50.17%, 72.16%)
                         avatar.x = Math.round(canvas.width * 0.5017);
                         avatar.y = Math.round(canvas.height * 0.7216);
                         avatar.radius = Math.round(canvas.width * 0.165); // 16.5% radius for 320px diameter on standard 1920px width
                         
-                        // Update slider ranges to match new canvas dimensions (with minimum 4000px for high-res)
-                        const maxWidth = Math.max(canvas.width, 4000);
-                        const maxHeight = Math.max(canvas.height, 4000);
+                        // Update slider ranges to match EXACT canvas dimensions
+                        const maxWidth = canvas.width;
+                        const maxHeight = canvas.height;
                         
                         // Avatar sliders
                         document.getElementById('avatarX').max = maxWidth;
@@ -1736,34 +1736,39 @@
             const canvasWidth = canvas.width;
             const canvasHeight = canvas.height;
 
-            // Calculate percentages relative to actual canvas dimensions (0-100%)
-            const avatar_x_pct = Number(((avatar.x / canvasWidth) * 100).toFixed(2));
-            const avatar_y_pct = Number(((avatar.y / canvasHeight) * 100).toFixed(2));
-            const avatar_r_pct = Number(((avatar.radius / canvasWidth) * 100).toFixed(2));
+            // Export EXACT RAW PIXEL COORDINATES (no percentages)
+            const avatar_x = Math.round(avatar.x);
+            const avatar_y = Math.round(avatar.y);
+            const avatar_radius = Math.round(avatar.radius);
 
-            const username_x_pct = Number(((text.x / canvasWidth) * 100).toFixed(2));
-            const username_y_pct = Number(((text.y / canvasHeight) * 100).toFixed(2));
+            const username_x = Math.round(text.x);
+            const username_y = Math.round(text.y);
 
-            const canvas_text_x_pct = Number(((canvasText.x / canvasWidth) * 100).toFixed(2));
-            const canvas_text_y_pct = Number(((canvasText.y / canvasHeight) * 100).toFixed(2));
+            const canvas_text_x = Math.round(canvasText.x);
+            const canvas_text_y = Math.round(canvasText.y);
 
             const coordinates = {
+                canvas_dimensions: {
+                    width: canvasWidth,
+                    height: canvasHeight
+                },
                 avatar: {
-                    x_pct: avatar_x_pct,
-                    y_pct: avatar_y_pct,
+                    x: avatar_x,        // Center X in actual pixels
+                    y: avatar_y,        // Center Y in actual pixels
+                    radius: avatar_radius, // Radius in actual pixels
                     show: imageLayers.show_avatar
                 },
                 username: {
-                    x_pct: username_x_pct,
-                    y_pct: username_y_pct,
+                    x: username_x,      // X in actual pixels
+                    y: username_y,      // Y in actual pixels
                     font_size: text.fontSize,
                     color: text.color,
                     show: imageLayers.show_username
                 },
                 canvas_text: {
                     text: canvasText.content,
-                    x_pct: canvas_text_x_pct,
-                    y_pct: canvas_text_y_pct,
+                    x: canvas_text_x,   // X in actual pixels
+                    y: canvas_text_y,   // Y in actual pixels
                     font_size: canvasText.fontSize,
                     color: canvasText.color,
                     show: imageLayers.show_canvas_text
