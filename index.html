@@ -1721,14 +1721,14 @@
             const real_canvas_text_x = canvasText.x * scaleX;
             const real_canvas_text_y = canvasText.y * scaleY;
 
-            // Convert to percentage-based coordinates (0-100)
-            const avatar_x_pct = (real_avatar_x / naturalWidth) * 100;
-            const avatar_y_pct = (real_avatar_y / naturalHeight) * 100;
-            const avatar_r_pct = (real_avatar_radius / naturalWidth) * 100;
-            const text_x_pct = (real_text_x / naturalWidth) * 100;
-            const text_y_pct = (real_text_y / naturalHeight) * 100;
-            const canvas_text_x_pct = (real_canvas_text_x / naturalWidth) * 100;
-            const canvas_text_y_pct = (real_canvas_text_y / naturalHeight) * 100;
+            // Convert to percentage-based coordinates (0-100) with fallback values
+            const avatar_x_pct = (real_avatar_x / naturalWidth) * 100 || 50;
+            const avatar_y_pct = (real_avatar_y / naturalHeight) * 100 || 50;
+            const avatar_r_pct = (real_avatar_radius / naturalWidth) * 100 || 25;
+            const text_x_pct = (real_text_x / naturalWidth) * 100 || 50;
+            const text_y_pct = (real_text_y / naturalHeight) * 100 || 50;
+            const canvas_text_x_pct = (real_canvas_text_x / naturalWidth) * 100 || 50;
+            const canvas_text_y_pct = (real_canvas_text_y / naturalHeight) * 100 || 50;
 
             const coordinates = {
                 avatar: {
