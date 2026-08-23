@@ -726,6 +726,12 @@
             <div class="control-section active" id="avatar-controls">
                 <h3>إعدادات الأفاتار</h3>
                 <div class="control-group">
+                    <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 12px;">
+                        <input type="checkbox" id="showAvatar" checked style="width: 18px; height: 18px; cursor: pointer;">
+                        <label for="showAvatar" style="margin: 0; cursor: pointer; font-weight: 500;">🖼️ إظهار صورة الأفاتار</label>
+                    </div>
+                </div>
+                <div class="control-group">
                     <label>موقع X: <span class="slider-value" id="avatarXValue">100</span></label>
                     <div style="display: flex; gap: 10px; align-items: center;">
                         <input type="range" id="avatarX" class="range-slider" min="0" max="800" value="100" style="flex: 1;">
@@ -751,6 +757,12 @@
             <!-- Username Controls -->
             <div class="control-section" id="username-controls">
                 <h3>إعدادات الاسم</h3>
+                <div class="control-group">
+                    <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 12px;">
+                        <input type="checkbox" id="showUsername" checked style="width: 18px; height: 18px; cursor: pointer;">
+                        <label for="showUsername" style="margin: 0; cursor: pointer; font-weight: 500;">👤 إظهار اسم العضو على الصورة</label>
+                    </div>
+                </div>
                 <div class="control-group">
                     <label>موقع X: <span class="slider-value" id="textXValue">100</span></label>
                     <div style="display: flex; gap: 10px; align-items: center;">
@@ -785,6 +797,12 @@
             <!-- Canvas Text Controls -->
             <div class="control-section" id="canvas-text-controls">
                 <h3>إعدادات نص الصورة</h3>
+                <div class="control-group">
+                    <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 12px;">
+                        <input type="checkbox" id="showCanvasText" checked style="width: 18px; height: 18px; cursor: pointer;">
+                        <label for="showCanvasText" style="margin: 0; cursor: pointer; font-weight: 500;">💬 إظهار نص الترحيب على الصورة</label>
+                    </div>
+                </div>
                 <div class="control-group">
                     <label>نص الصورة:</label>
                     <input type="text" id="canvasTextContent" value="Welcome to the server!">
@@ -900,7 +918,7 @@
                 <!-- Discord Chat Preview -->
                 <div class="control-group">
                     <label>معاينة رسالة الشات:</label>
-                    <div id="discord-chat-preview" style="background: rgba(30, 31, 34, 0.8); padding: 15px; border-radius: 8px; border: 1px solid rgba(255, 255, 255, 0.1); min-height: 60px; font-size: 14px; color: #dcddde; line-height: 1.4;">
+                    <div id="discord-chat-preview" style="background: rgba(30, 31, 34, 0.8); padding: 15px; border-radius: 8px; border: 1px solid rgba(255, 255, 255, 0.1); min-height: 60px; font-size: 14px; color: #dcddde; line-height: 1.4; word-break: break-word; max-width: 100%; overflow-wrap: break-word;">
                         مرحباً بك يا @member في السيرفر!
                     </div>
                 </div>
@@ -1023,6 +1041,13 @@
                 trigger: ''
             },
             channel_shortcuts: []
+        };
+
+        // Dynamic image layer toggles
+        const imageLayers = {
+            show_avatar: true,
+            show_username: true,
+            show_canvas_text: true
         };
 
         // Tab Navigation
@@ -1256,6 +1281,22 @@
             redrawCanvas();
         });
 
+        // Dynamic image layer toggle event listeners
+        document.getElementById('showAvatar').addEventListener('change', (e) => {
+            imageLayers.show_avatar = e.target.checked;
+            redrawCanvas();
+        });
+
+        document.getElementById('showUsername').addEventListener('change', (e) => {
+            imageLayers.show_username = e.target.checked;
+            redrawCanvas();
+        });
+
+        document.getElementById('showCanvasText').addEventListener('change', (e) => {
+            imageLayers.show_canvas_text = e.target.checked;
+            redrawCanvas();
+        });
+
         // Chat message event listeners
         document.getElementById('chat-message-text').addEventListener('input', (e) => {
             chatMessage.text = e.target.value;
@@ -1325,40 +1366,47 @@
         function updateChatPreview() {
             let previewText = chatMessage.text;
 
-            // Apply mention replacement
+            // Apply mention replacement with space-protected regex boundaries
             if (chatMessage.mention.enabled && chatMessage.mention.trigger) {
-                previewText = previewText.replace(new RegExp(chatMessage.mention.trigger, 'g'), '@member');
+                const mentionRegex = new RegExp(`(?<=^|\\s)${chatMessage.mention.trigger}(?=\\s|$)`, 'g');
+                previewText = previewText.replace(mentionRegex, '@member');
             }
 
-            // Apply owner mention replacement
+            // Apply owner mention replacement with space-protected regex boundaries
             if (chatMessage.owner.enabled && chatMessage.owner.trigger) {
-                previewText = previewText.replace(new RegExp(chatMessage.owner.trigger, 'g'), '@owner');
+                const ownerRegex = new RegExp(`(?<=^|\\s)${chatMessage.owner.trigger}(?=\\s|$)`, 'g');
+                previewText = previewText.replace(ownerRegex, '@owner');
             }
 
-            // Apply server mention replacement
+            // Apply server mention replacement with space-protected regex boundaries
             if (chatMessage.server.enabled && chatMessage.server.trigger) {
-                previewText = previewText.replace(new RegExp(chatMessage.server.trigger, 'g'), '@server');
+                const serverRegex = new RegExp(`(?<=^|\\s)${chatMessage.server.trigger}(?=\\s|$)`, 'g');
+                previewText = previewText.replace(serverRegex, '@server');
             }
 
-            // Apply bold formatting
+            // Apply bold formatting with space-protected regex boundaries
             if (chatMessage.bold.enabled && chatMessage.bold.trigger) {
-                previewText = previewText.replace(new RegExp(chatMessage.bold.trigger, 'g'), `**${chatMessage.bold.trigger}**`);
+                const boldRegex = new RegExp(`(?<=^|\\s)${chatMessage.bold.trigger}(?=\\s|$)`, 'g');
+                previewText = previewText.replace(boldRegex, `**${chatMessage.bold.trigger}**`);
             }
 
-            // Apply italic formatting
+            // Apply italic formatting with space-protected regex boundaries
             if (chatMessage.italic.enabled && chatMessage.italic.trigger) {
-                previewText = previewText.replace(new RegExp(chatMessage.italic.trigger, 'g'), `*${chatMessage.italic.trigger}*`);
+                const italicRegex = new RegExp(`(?<=^|\\s)${chatMessage.italic.trigger}(?=\\s|$)`, 'g');
+                previewText = previewText.replace(italicRegex, `*${chatMessage.italic.trigger}*`);
             }
 
-            // Apply count replacement
+            // Apply count replacement with space-protected regex boundaries
             if (chatMessage.count.enabled && chatMessage.count.trigger) {
-                previewText = previewText.replace(new RegExp(chatMessage.count.trigger, 'g'), '123');
+                const countRegex = new RegExp(`(?<=^|\\s)${chatMessage.count.trigger}(?=\\s|$)`, 'g');
+                previewText = previewText.replace(countRegex, '123');
             }
 
-            // Apply channel shortcuts
+            // Apply channel shortcuts with space-protected regex boundaries
             chatMessage.channel_shortcuts.forEach(shortcut => {
                 if (shortcut.shortcut && shortcut.channel_id) {
-                    previewText = previewText.replace(new RegExp(shortcut.shortcut, 'g'), `<#${shortcut.channel_id}>`);
+                    const channelRegex = new RegExp(`(?<=^|\\s)${shortcut.shortcut}(?=\\s|$)`, 'g');
+                    previewText = previewText.replace(channelRegex, `<#${shortcut.channel_id}>`);
                 }
             });
 
@@ -1474,32 +1522,38 @@
                 }
             }
 
-            // Draw canvas text
-            ctx.font = `${canvasText.fontSize}px 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif`;
-            ctx.fillStyle = canvasText.color;
-            ctx.textAlign = 'center';
-            ctx.fillText(canvasText.content, canvasText.x, canvasText.y);
+            // Draw canvas text (only if toggle is enabled)
+            if (imageLayers.show_canvas_text) {
+                ctx.font = `${canvasText.fontSize}px 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif`;
+                ctx.fillStyle = canvasText.color;
+                ctx.textAlign = 'center';
+                ctx.fillText(canvasText.content, canvasText.x, canvasText.y);
+            }
 
-            // Draw username text
-            ctx.font = `bold ${text.fontSize}px 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif`;
-            ctx.fillStyle = text.color;
-            ctx.fillText(text.content, text.x, text.y);
+            // Draw username text (only if toggle is enabled)
+            if (imageLayers.show_username) {
+                ctx.font = `bold ${text.fontSize}px 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif`;
+                ctx.fillStyle = text.color;
+                ctx.fillText(text.content, text.x, text.y);
+            }
 
-            // Draw avatar circle
-            ctx.beginPath();
-            ctx.arc(avatar.x, avatar.y, avatar.radius, 0, Math.PI * 2);
-            ctx.fillStyle = '#5865F2';
-            ctx.fill();
-            ctx.strokeStyle = '#ffffff';
-            ctx.lineWidth = 3;
-            ctx.stroke();
+            // Draw avatar circle (only if toggle is enabled)
+            if (imageLayers.show_avatar) {
+                ctx.beginPath();
+                ctx.arc(avatar.x, avatar.y, avatar.radius, 0, Math.PI * 2);
+                ctx.fillStyle = '#5865F2';
+                ctx.fill();
+                ctx.strokeStyle = '#ffffff';
+                ctx.lineWidth = 3;
+                ctx.stroke();
 
-            // Draw avatar placeholder icon
-            ctx.fillStyle = '#ffffff';
-            ctx.font = `${avatar.radius}px Arial`;
-            ctx.textAlign = 'center';
-            ctx.textBaseline = 'middle';
-            ctx.fillText('👤', avatar.x, avatar.y);
+                // Draw avatar placeholder icon
+                ctx.fillStyle = '#ffffff';
+                ctx.font = `${avatar.radius}px Arial`;
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillText('👤', avatar.x, avatar.y);
+            }
         }
 
         // Mouse/Touch Events for Dragging
@@ -1671,20 +1725,23 @@
                 avatar: {
                     x: Math.round(real_avatar_x),
                     y: Math.round(real_avatar_y),
-                    radius: Math.round(real_avatar_radius)
+                    radius: Math.round(real_avatar_radius),
+                    show: imageLayers.show_avatar
                 },
                 username: {
                     x: Math.round(real_text_x),
                     y: Math.round(real_text_y),
                     font_size: text.fontSize,
-                    color: text.color
+                    color: text.color,
+                    show: imageLayers.show_username
                 },
                 canvas_text: {
                     text: canvasText.content,
                     x: Math.round(real_canvas_text_x),
                     y: Math.round(real_canvas_text_y),
                     font_size: canvasText.fontSize,
-                    color: canvasText.color
+                    color: canvasText.color,
+                    show: imageLayers.show_canvas_text
                 },
                 chat_message: {
                     text: document.getElementById('chat-message-text').value,
