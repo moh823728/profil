@@ -727,15 +727,24 @@
                 <h3>إعدادات الأفاتار</h3>
                 <div class="control-group">
                     <label>موقع X: <span class="slider-value" id="avatarXValue">100</span></label>
-                    <input type="range" id="avatarX" class="range-slider" min="0" max="800" value="100">
+                    <div style="display: flex; gap: 10px; align-items: center;">
+                        <input type="range" id="avatarX" class="range-slider" min="0" max="800" value="100" style="flex: 1;">
+                        <input type="number" id="avatarXNum" value="100" min="0" max="800" style="width: 80px; padding: 8px; background: rgba(30, 31, 34, 0.8); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 6px; color: white; font-size: 13px;">
+                    </div>
                 </div>
                 <div class="control-group">
                     <label>موقع Y: <span class="slider-value" id="avatarYValue">100</span></label>
-                    <input type="range" id="avatarY" class="range-slider" min="0" max="400" value="100">
+                    <div style="display: flex; gap: 10px; align-items: center;">
+                        <input type="range" id="avatarY" class="range-slider" min="0" max="400" value="100" style="flex: 1;">
+                        <input type="number" id="avatarYNum" value="100" min="0" max="400" style="width: 80px; padding: 8px; background: rgba(30, 31, 34, 0.8); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 6px; color: white; font-size: 13px;">
+                    </div>
                 </div>
                 <div class="control-group">
                     <label>نصف القطر: <span class="slider-value" id="avatarRadiusValue">50</span></label>
-                    <input type="range" id="avatarRadius" class="range-slider" min="20" max="150" value="50">
+                    <div style="display: flex; gap: 10px; align-items: center;">
+                        <input type="range" id="avatarRadius" class="range-slider" min="20" max="1000" value="50" style="flex: 1;">
+                        <input type="number" id="avatarRadiusNum" value="50" min="20" max="1000" style="width: 80px; padding: 8px; background: rgba(30, 31, 34, 0.8); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 6px; color: white; font-size: 13px;">
+                    </div>
                 </div>
             </div>
 
@@ -744,15 +753,24 @@
                 <h3>إعدادات الاسم</h3>
                 <div class="control-group">
                     <label>موقع X: <span class="slider-value" id="textXValue">100</span></label>
-                    <input type="range" id="textX" class="range-slider" min="0" max="800" value="100">
+                    <div style="display: flex; gap: 10px; align-items: center;">
+                        <input type="range" id="textX" class="range-slider" min="0" max="800" value="100" style="flex: 1;">
+                        <input type="number" id="textXNum" value="100" min="0" max="800" style="width: 80px; padding: 8px; background: rgba(30, 31, 34, 0.8); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 6px; color: white; font-size: 13px;">
+                    </div>
                 </div>
                 <div class="control-group">
                     <label>موقع Y: <span class="slider-value" id="textYValue">250</span></label>
-                    <input type="range" id="textY" class="range-slider" min="0" max="400" value="250">
+                    <div style="display: flex; gap: 10px; align-items: center;">
+                        <input type="range" id="textY" class="range-slider" min="0" max="400" value="250" style="flex: 1;">
+                        <input type="number" id="textYNum" value="250" min="0" max="400" style="width: 80px; padding: 8px; background: rgba(30, 31, 34, 0.8); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 6px; color: white; font-size: 13px;">
+                    </div>
                 </div>
                 <div class="control-group">
                     <label>حجم الخط: <span class="slider-value" id="fontSizeValue">24</span></label>
-                    <input type="range" id="fontSize" class="range-slider" min="12" max="72" value="24">
+                    <div style="display: flex; gap: 10px; align-items: center;">
+                        <input type="range" id="fontSize" class="range-slider" min="12" max="200" value="24" style="flex: 1;">
+                        <input type="number" id="fontSizeNum" value="24" min="12" max="200" style="width: 80px; padding: 8px; background: rgba(30, 31, 34, 0.8); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 6px; color: white; font-size: 13px;">
+                    </div>
                 </div>
                 <div class="control-group">
                     <label>لون النص:</label>
@@ -773,15 +791,24 @@
                 </div>
                 <div class="control-group">
                     <label>موقع X: <span class="slider-value" id="messageXValue">100</span></label>
-                    <input type="range" id="messageX" class="range-slider" min="0" max="800" value="100">
+                    <div style="display: flex; gap: 10px; align-items: center;">
+                        <input type="range" id="messageX" class="range-slider" min="0" max="800" value="100" style="flex: 1;">
+                        <input type="number" id="messageXNum" value="100" min="0" max="800" style="width: 80px; padding: 8px; background: rgba(30, 31, 34, 0.8); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 6px; color: white; font-size: 13px;">
+                    </div>
                 </div>
                 <div class="control-group">
                     <label>موقع Y: <span class="slider-value" id="messageYValue">320</span></label>
-                    <input type="range" id="messageY" class="range-slider" min="0" max="400" value="320">
+                    <div style="display: flex; gap: 10px; align-items: center;">
+                        <input type="range" id="messageY" class="range-slider" min="0" max="400" value="320" style="flex: 1;">
+                        <input type="number" id="messageYNum" value="320" min="0" max="400" style="width: 80px; padding: 8px; background: rgba(30, 31, 34, 0.8); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 6px; color: white; font-size: 13px;">
+                    </div>
                 </div>
                 <div class="control-group">
                     <label>حجم الخط: <span class="slider-value" id="messageFontSizeValue">16</span></label>
-                    <input type="range" id="messageFontSize" class="range-slider" min="12" max="48" value="16">
+                    <div style="display: flex; gap: 10px; align-items: center;">
+                        <input type="range" id="messageFontSize" class="range-slider" min="12" max="200" value="16" style="flex: 1;">
+                        <input type="number" id="messageFontSizeNum" value="16" min="12" max="200" style="width: 80px; padding: 8px; background: rgba(30, 31, 34, 0.8); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 6px; color: white; font-size: 13px;">
+                    </div>
                 </div>
                 <div class="control-group">
                     <label>لون النص:</label>
@@ -1032,13 +1059,35 @@
                         // Resize canvas to match original image dimensions
                         canvas.width = img.naturalWidth;
                         canvas.height = img.naturalHeight;
-                        // Update slider ranges to match new canvas dimensions
-                        document.getElementById('avatarX').max = canvas.width;
-                        document.getElementById('avatarY').max = canvas.height;
-                        document.getElementById('textX').max = canvas.width;
-                        document.getElementById('textY').max = canvas.height;
-                        document.getElementById('messageX').max = canvas.width;
-                        document.getElementById('messageY').max = canvas.height;
+                        
+                        // Update slider ranges to match new canvas dimensions (with minimum 4000px for high-res)
+                        const maxWidth = Math.max(canvas.width, 4000);
+                        const maxHeight = Math.max(canvas.height, 4000);
+                        
+                        // Avatar sliders
+                        document.getElementById('avatarX').max = maxWidth;
+                        document.getElementById('avatarXNum').max = maxWidth;
+                        document.getElementById('avatarY').max = maxHeight;
+                        document.getElementById('avatarYNum').max = maxHeight;
+                        document.getElementById('avatarRadius').max = 1000;
+                        document.getElementById('avatarRadiusNum').max = 1000;
+                        
+                        // Username sliders
+                        document.getElementById('textX').max = maxWidth;
+                        document.getElementById('textXNum').max = maxWidth;
+                        document.getElementById('textY').max = maxHeight;
+                        document.getElementById('textYNum').max = maxHeight;
+                        document.getElementById('fontSize').max = 200;
+                        document.getElementById('fontSizeNum').max = 200;
+                        
+                        // Canvas text sliders
+                        document.getElementById('messageX').max = maxWidth;
+                        document.getElementById('messageXNum').max = maxWidth;
+                        document.getElementById('messageY').max = maxHeight;
+                        document.getElementById('messageYNum').max = maxHeight;
+                        document.getElementById('messageFontSize').max = 200;
+                        document.getElementById('messageFontSizeNum').max = 200;
+                        
                         redrawCanvas();
                     };
                     img.src = event.target.result;
@@ -1051,12 +1100,30 @@
         document.getElementById('avatarX').addEventListener('input', (e) => {
             avatar.x = parseInt(e.target.value);
             document.getElementById('avatarXValue').textContent = avatar.x;
+            document.getElementById('avatarXNum').value = avatar.x;
+            updateLiveCoordinates();
+            redrawCanvas();
+        });
+
+        document.getElementById('avatarXNum').addEventListener('input', (e) => {
+            avatar.x = parseInt(e.target.value) || 0;
+            document.getElementById('avatarX').value = avatar.x;
+            document.getElementById('avatarXValue').textContent = avatar.x;
             updateLiveCoordinates();
             redrawCanvas();
         });
 
         document.getElementById('avatarY').addEventListener('input', (e) => {
             avatar.y = parseInt(e.target.value);
+            document.getElementById('avatarYValue').textContent = avatar.y;
+            document.getElementById('avatarYNum').value = avatar.y;
+            updateLiveCoordinates();
+            redrawCanvas();
+        });
+
+        document.getElementById('avatarYNum').addEventListener('input', (e) => {
+            avatar.y = parseInt(e.target.value) || 0;
+            document.getElementById('avatarY').value = avatar.y;
             document.getElementById('avatarYValue').textContent = avatar.y;
             updateLiveCoordinates();
             redrawCanvas();
@@ -1065,12 +1132,30 @@
         document.getElementById('avatarRadius').addEventListener('input', (e) => {
             avatar.radius = parseInt(e.target.value);
             document.getElementById('avatarRadiusValue').textContent = avatar.radius;
+            document.getElementById('avatarRadiusNum').value = avatar.radius;
+            updateLiveCoordinates();
+            redrawCanvas();
+        });
+
+        document.getElementById('avatarRadiusNum').addEventListener('input', (e) => {
+            avatar.radius = parseInt(e.target.value) || 20;
+            document.getElementById('avatarRadius').value = avatar.radius;
+            document.getElementById('avatarRadiusValue').textContent = avatar.radius;
             updateLiveCoordinates();
             redrawCanvas();
         });
 
         document.getElementById('textX').addEventListener('input', (e) => {
             text.x = parseInt(e.target.value);
+            document.getElementById('textXValue').textContent = text.x;
+            document.getElementById('textXNum').value = text.x;
+            updateLiveCoordinates();
+            redrawCanvas();
+        });
+
+        document.getElementById('textXNum').addEventListener('input', (e) => {
+            text.x = parseInt(e.target.value) || 0;
+            document.getElementById('textX').value = text.x;
             document.getElementById('textXValue').textContent = text.x;
             updateLiveCoordinates();
             redrawCanvas();
@@ -1079,12 +1164,30 @@
         document.getElementById('textY').addEventListener('input', (e) => {
             text.y = parseInt(e.target.value);
             document.getElementById('textYValue').textContent = text.y;
+            document.getElementById('textYNum').value = text.y;
+            updateLiveCoordinates();
+            redrawCanvas();
+        });
+
+        document.getElementById('textYNum').addEventListener('input', (e) => {
+            text.y = parseInt(e.target.value) || 0;
+            document.getElementById('textY').value = text.y;
+            document.getElementById('textYValue').textContent = text.y;
             updateLiveCoordinates();
             redrawCanvas();
         });
 
         document.getElementById('fontSize').addEventListener('input', (e) => {
             text.fontSize = parseInt(e.target.value);
+            document.getElementById('fontSizeValue').textContent = text.fontSize;
+            document.getElementById('fontSizeNum').value = text.fontSize;
+            updateLiveCoordinates();
+            redrawCanvas();
+        });
+
+        document.getElementById('fontSizeNum').addEventListener('input', (e) => {
+            text.fontSize = parseInt(e.target.value) || 12;
+            document.getElementById('fontSize').value = text.fontSize;
             document.getElementById('fontSizeValue').textContent = text.fontSize;
             updateLiveCoordinates();
             redrawCanvas();
@@ -1109,17 +1212,41 @@
         document.getElementById('messageX').addEventListener('input', (e) => {
             canvasText.x = parseInt(e.target.value);
             document.getElementById('messageXValue').textContent = canvasText.x;
+            document.getElementById('messageXNum').value = canvasText.x;
+            redrawCanvas();
+        });
+
+        document.getElementById('messageXNum').addEventListener('input', (e) => {
+            canvasText.x = parseInt(e.target.value) || 0;
+            document.getElementById('messageX').value = canvasText.x;
+            document.getElementById('messageXValue').textContent = canvasText.x;
             redrawCanvas();
         });
 
         document.getElementById('messageY').addEventListener('input', (e) => {
             canvasText.y = parseInt(e.target.value);
             document.getElementById('messageYValue').textContent = canvasText.y;
+            document.getElementById('messageYNum').value = canvasText.y;
+            redrawCanvas();
+        });
+
+        document.getElementById('messageYNum').addEventListener('input', (e) => {
+            canvasText.y = parseInt(e.target.value) || 0;
+            document.getElementById('messageY').value = canvasText.y;
+            document.getElementById('messageYValue').textContent = canvasText.y;
             redrawCanvas();
         });
 
         document.getElementById('messageFontSize').addEventListener('input', (e) => {
             canvasText.fontSize = parseInt(e.target.value);
+            document.getElementById('messageFontSizeValue').textContent = canvasText.fontSize;
+            document.getElementById('messageFontSizeNum').value = canvasText.fontSize;
+            redrawCanvas();
+        });
+
+        document.getElementById('messageFontSizeNum').addEventListener('input', (e) => {
+            canvasText.fontSize = parseInt(e.target.value) || 12;
+            document.getElementById('messageFontSize').value = canvasText.fontSize;
             document.getElementById('messageFontSizeValue').textContent = canvasText.fontSize;
             redrawCanvas();
         });
@@ -1470,24 +1597,30 @@
                 avatar.y = Math.max(avatar.radius, Math.min(canvas.height - avatar.radius, pos.y - dragOffset.y));
                 
                 document.getElementById('avatarX').value = Math.round(avatar.x);
+                document.getElementById('avatarXNum').value = Math.round(avatar.x);
                 document.getElementById('avatarXValue').textContent = Math.round(avatar.x);
                 document.getElementById('avatarY').value = Math.round(avatar.y);
+                document.getElementById('avatarYNum').value = Math.round(avatar.y);
                 document.getElementById('avatarYValue').textContent = Math.round(avatar.y);
             } else if (dragTarget === 'text') {
                 text.x = Math.max(0, Math.min(canvas.width, pos.x - dragOffset.x));
                 text.y = Math.max(text.fontSize, Math.min(canvas.height, pos.y - dragOffset.y));
                 
                 document.getElementById('textX').value = Math.round(text.x);
+                document.getElementById('textXNum').value = Math.round(text.x);
                 document.getElementById('textXValue').textContent = Math.round(text.x);
                 document.getElementById('textY').value = Math.round(text.y);
+                document.getElementById('textYNum').value = Math.round(text.y);
                 document.getElementById('textYValue').textContent = Math.round(text.y);
             } else if (dragTarget === 'canvasText') {
                 canvasText.x = Math.max(0, Math.min(canvas.width, pos.x - dragOffset.x));
                 canvasText.y = Math.max(canvasText.fontSize, Math.min(canvas.height, pos.y - dragOffset.y));
                 
                 document.getElementById('messageX').value = Math.round(canvasText.x);
+                document.getElementById('messageXNum').value = Math.round(canvasText.x);
                 document.getElementById('messageXValue').textContent = Math.round(canvasText.x);
                 document.getElementById('messageY').value = Math.round(canvasText.y);
+                document.getElementById('messageYNum').value = Math.round(canvasText.y);
                 document.getElementById('messageYValue').textContent = Math.round(canvasText.y);
             }
             
