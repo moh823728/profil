@@ -231,6 +231,18 @@
             gap: 20px;
             box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
             border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        /* Full width layout for chat message tab */
+        .main-content.chat-tab-active .canvas-container {
+            display: none;
+        }
+
+        .main-content.chat-tab-active .controls-sidebar {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
         }
 
         .control-section {
@@ -662,6 +674,20 @@
                 width: 100%;
             }
         }
+
+        /* Discord Chat Preview */
+        #discord-chat-preview {
+            font-family: 'gg sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+        }
+
+        #discord-chat-preview strong {
+            color: #ffffff;
+            font-weight: 600;
+        }
+
+        #discord-chat-preview em {
+            font-style: italic;
+        }
     </style>
 </head>
 <body>
@@ -679,8 +705,9 @@
 
     <div class="nav-tabs">
         <button class="nav-tab active" data-tab="avatar">تعديل الأفاتار</button>
-        <button class="nav-tab" data-tab="username">تعديل الاسم</button>
-        <button class="nav-tab" data-tab="message">تعديل الرسالة</button>
+        <button class="nav-tab" data-tab="username">تعديل اسم الصورة</button>
+        <button class="nav-tab" data-tab="canvas-text">تعديل نص الصورة</button>
+        <button class="nav-tab" data-tab="chat-message">تعديل رسالة الشات</button>
     </div>
 
     <div class="main-content">
@@ -737,9 +764,13 @@
                 </div>
             </div>
 
-            <!-- Message Controls -->
-            <div class="control-section" id="message-controls">
-                <h3>إعدادات الرسالة</h3>
+            <!-- Canvas Text Controls -->
+            <div class="control-section" id="canvas-text-controls">
+                <h3>إعدادات نص الصورة</h3>
+                <div class="control-group">
+                    <label>نص الصورة:</label>
+                    <input type="text" id="canvasTextContent" value="Welcome to the server!">
+                </div>
                 <div class="control-group">
                     <label>موقع X: <span class="slider-value" id="messageXValue">100</span></label>
                     <input type="range" id="messageX" class="range-slider" min="0" max="800" value="100">
@@ -756,9 +787,82 @@
                     <label>لون النص:</label>
                     <input type="color" id="messageColor" value="#b9bbbe">
                 </div>
+            </div>
+
+            <!-- Chat Message Controls -->
+            <div class="control-section" id="chat-message-controls">
+                <h3>إعدادات رسالة الشات</h3>
                 <div class="control-group">
-                    <label>الرسالة:</label>
-                    <input type="text" id="messageContent" value="مرحباً بك في السيرفر!">
+                    <label>رسالة الشات:</label>
+                    <textarea id="chat-message-text" placeholder="اكتب رسالة الشات هنا..." style="width: 100%; padding: 12px; background: rgba(30, 31, 34, 0.8); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 8px; color: white; font-size: 14px; min-height: 80px; resize: vertical;">مرحباً بك يا 1 في السيرفر!</textarea>
+                </div>
+                
+                <div class="control-group">
+                    <label>الميزات المتقدمة:</label>
+                    
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 15px;">
+                        <!-- Member Mention -->
+                        <div style="background: rgba(30, 31, 34, 0.6); padding: 15px; border-radius: 8px; border: 1px solid rgba(255, 255, 255, 0.05);">
+                            <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px;">
+                                <input type="checkbox" id="toggle-mention" checked style="width: 18px; height: 18px; cursor: pointer;">
+                                <label for="toggle-mention" style="margin: 0; cursor: pointer; font-weight: 500;">👤 منشن العضو</label>
+                            </div>
+                            <input type="text" id="mention-trigger" value="{mention}" placeholder="رمز المنشن مثل {mention}" style="width: 100%; padding: 10px; background: rgba(30, 31, 34, 0.8); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 6px; color: white; font-size: 13px;">
+                        </div>
+
+                        <!-- Owner Mention -->
+                        <div style="background: rgba(30, 31, 34, 0.6); padding: 15px; border-radius: 8px; border: 1px solid rgba(255, 255, 255, 0.05);">
+                            <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px;">
+                                <input type="checkbox" id="toggle-owner" style="width: 18px; height: 18px; cursor: pointer;">
+                                <label for="toggle-owner" style="margin: 0; cursor: pointer; font-weight: 500;">👑 منشن المالك</label>
+                            </div>
+                            <input type="text" id="owner-trigger" value="{owner}" placeholder="رمز المالك مثل {owner}" style="width: 100%; padding: 10px; background: rgba(30, 31, 34, 0.8); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 6px; color: white; font-size: 13px;">
+                        </div>
+
+                        <!-- Server/Help Tag -->
+                        <div style="background: rgba(30, 31, 34, 0.6); padding: 15px; border-radius: 8px; border: 1px solid rgba(255, 255, 255, 0.05);">
+                            <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px;">
+                                <input type="checkbox" id="toggle-server" style="width: 18px; height: 18px; cursor: pointer;">
+                                <label for="toggle-server" style="margin: 0; cursor: pointer; font-weight: 500;">🏷️ منشن السيرفر/المساعدة</label>
+                            </div>
+                            <input type="text" id="server-trigger" value="" placeholder="رمز السيرفر مثل @server" style="width: 100%; padding: 10px; background: rgba(30, 31, 34, 0.8); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 6px; color: white; font-size: 13px;">
+                        </div>
+
+                        <!-- Bold Text -->
+                        <div style="background: rgba(30, 31, 34, 0.6); padding: 15px; border-radius: 8px; border: 1px solid rgba(255, 255, 255, 0.05);">
+                            <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px;">
+                                <input type="checkbox" id="toggle-bold" checked style="width: 18px; height: 18px; cursor: pointer;">
+                                <label for="toggle-bold" style="margin: 0; cursor: pointer; font-weight: 500;">🔤 نص عريض</label>
+                            </div>
+                            <input type="text" id="bold-trigger" value="السيرفر" placeholder="الكلمة المراد تكبيرها" style="width: 100%; padding: 10px; background: rgba(30, 31, 34, 0.8); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 6px; color: white; font-size: 13px;">
+                        </div>
+
+                        <!-- Italic Text -->
+                        <div style="background: rgba(30, 31, 34, 0.6); padding: 15px; border-radius: 8px; border: 1px solid rgba(255, 255, 255, 0.05);">
+                            <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px;">
+                                <input type="checkbox" id="toggle-italic" style="width: 18px; height: 18px; cursor: pointer;">
+                                <label for="toggle-italic" style="margin: 0; cursor: pointer; font-weight: 500;">✨ نص مائل</label>
+                            </div>
+                            <input type="text" id="italic-trigger" value="" placeholder="الكلمة المائلة" style="width: 100%; padding: 10px; background: rgba(30, 31, 34, 0.8); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 6px; color: white; font-size: 13px;">
+                        </div>
+
+                        <!-- Member Count -->
+                        <div style="background: rgba(30, 31, 34, 0.6); padding: 15px; border-radius: 8px; border: 1px solid rgba(255, 255, 255, 0.05);">
+                            <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px;">
+                                <input type="checkbox" id="toggle-count" style="width: 18px; height: 18px; cursor: pointer;">
+                                <label for="toggle-count" style="margin: 0; cursor: pointer; font-weight: 500;">📊 عدد الأعضاء</label>
+                            </div>
+                            <input type="text" id="count-trigger" value="{count}" placeholder="رمز العدد مثل {count}" style="width: 100%; padding: 10px; background: rgba(30, 31, 34, 0.8); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 6px; color: white; font-size: 13px;">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Discord Chat Preview -->
+                <div class="control-group">
+                    <label>معاينة رسالة الشات:</label>
+                    <div id="discord-chat-preview" style="background: rgba(30, 31, 34, 0.8); padding: 15px; border-radius: 8px; border: 1px solid rgba(255, 255, 255, 0.1); min-height: 60px; font-size: 14px; color: #dcddde; line-height: 1.4;">
+                        مرحباً بك يا @member في السيرفر!
+                    </div>
                 </div>
             </div>
 
@@ -844,12 +948,40 @@
             content: 'User#0000'
         };
 
-        const message = {
+        const canvasText = {
             x: 100,
             y: 320,
             fontSize: 16,
             color: '#b9bbbe',
-            content: 'مرحباً بك في السيرفر!'
+            content: 'Welcome to the server!'
+        };
+
+        const chatMessage = {
+            text: 'مرحباً بك يا 1 في السيرفر!',
+            mention: {
+                enabled: true,
+                trigger: '{mention}'
+            },
+            owner: {
+                enabled: false,
+                trigger: '{owner}'
+            },
+            server: {
+                enabled: false,
+                trigger: ''
+            },
+            bold: {
+                enabled: true,
+                trigger: 'السيرفر'
+            },
+            italic: {
+                enabled: false,
+                trigger: ''
+            },
+            count: {
+                enabled: false,
+                trigger: '{count}'
+            }
         };
 
         // Tab Navigation
@@ -863,6 +995,14 @@
                 tab.classList.add('active');
                 const tabName = tab.dataset.tab;
                 document.getElementById(`${tabName}-controls`).classList.add('active');
+
+                // Handle full-width layout for chat message tab
+                const mainContent = document.querySelector('.main-content');
+                if (tabName === 'chat-message') {
+                    mainContent.classList.add('chat-tab-active');
+                } else {
+                    mainContent.classList.remove('chat-tab-active');
+                }
             });
         });
 
@@ -936,33 +1076,142 @@
             redrawCanvas();
         });
 
+        // Canvas text event listeners
+        document.getElementById('canvasTextContent').addEventListener('input', (e) => {
+            canvasText.content = e.target.value;
+            redrawCanvas();
+        });
+
         document.getElementById('messageX').addEventListener('input', (e) => {
-            message.x = parseInt(e.target.value);
-            document.getElementById('messageXValue').textContent = message.x;
+            canvasText.x = parseInt(e.target.value);
+            document.getElementById('messageXValue').textContent = canvasText.x;
             redrawCanvas();
         });
 
         document.getElementById('messageY').addEventListener('input', (e) => {
-            message.y = parseInt(e.target.value);
-            document.getElementById('messageYValue').textContent = message.y;
+            canvasText.y = parseInt(e.target.value);
+            document.getElementById('messageYValue').textContent = canvasText.y;
             redrawCanvas();
         });
 
         document.getElementById('messageFontSize').addEventListener('input', (e) => {
-            message.fontSize = parseInt(e.target.value);
-            document.getElementById('messageFontSizeValue').textContent = message.fontSize;
+            canvasText.fontSize = parseInt(e.target.value);
+            document.getElementById('messageFontSizeValue').textContent = canvasText.fontSize;
             redrawCanvas();
         });
 
         document.getElementById('messageColor').addEventListener('input', (e) => {
-            message.color = e.target.value;
+            canvasText.color = e.target.value;
             redrawCanvas();
         });
 
-        document.getElementById('messageContent').addEventListener('input', (e) => {
-            message.content = e.target.value;
-            redrawCanvas();
+        // Chat message event listeners
+        document.getElementById('chat-message-text').addEventListener('input', (e) => {
+            chatMessage.text = e.target.value;
+            updateChatPreview();
         });
+
+        document.getElementById('toggle-mention').addEventListener('change', (e) => {
+            chatMessage.mention.enabled = e.target.checked;
+            updateChatPreview();
+        });
+
+        document.getElementById('mention-trigger').addEventListener('input', (e) => {
+            chatMessage.mention.trigger = e.target.value;
+            updateChatPreview();
+        });
+
+        document.getElementById('toggle-owner').addEventListener('change', (e) => {
+            chatMessage.owner.enabled = e.target.checked;
+            updateChatPreview();
+        });
+
+        document.getElementById('owner-trigger').addEventListener('input', (e) => {
+            chatMessage.owner.trigger = e.target.value;
+            updateChatPreview();
+        });
+
+        document.getElementById('toggle-server').addEventListener('change', (e) => {
+            chatMessage.server.enabled = e.target.checked;
+            updateChatPreview();
+        });
+
+        document.getElementById('server-trigger').addEventListener('input', (e) => {
+            chatMessage.server.trigger = e.target.value;
+            updateChatPreview();
+        });
+
+        document.getElementById('toggle-bold').addEventListener('change', (e) => {
+            chatMessage.bold.enabled = e.target.checked;
+            updateChatPreview();
+        });
+
+        document.getElementById('bold-trigger').addEventListener('input', (e) => {
+            chatMessage.bold.trigger = e.target.value;
+            updateChatPreview();
+        });
+
+        document.getElementById('toggle-italic').addEventListener('change', (e) => {
+            chatMessage.italic.enabled = e.target.checked;
+            updateChatPreview();
+        });
+
+        document.getElementById('italic-trigger').addEventListener('input', (e) => {
+            chatMessage.italic.trigger = e.target.value;
+            updateChatPreview();
+        });
+
+        document.getElementById('toggle-count').addEventListener('change', (e) => {
+            chatMessage.count.enabled = e.target.checked;
+            updateChatPreview();
+        });
+
+        document.getElementById('count-trigger').addEventListener('input', (e) => {
+            chatMessage.count.trigger = e.target.value;
+            updateChatPreview();
+        });
+
+        function updateChatPreview() {
+            let previewText = chatMessage.text;
+
+            // Apply mention replacement
+            if (chatMessage.mention.enabled && chatMessage.mention.trigger) {
+                previewText = previewText.replace(new RegExp(chatMessage.mention.trigger, 'g'), '@member');
+            }
+
+            // Apply owner mention replacement
+            if (chatMessage.owner.enabled && chatMessage.owner.trigger) {
+                previewText = previewText.replace(new RegExp(chatMessage.owner.trigger, 'g'), '@owner');
+            }
+
+            // Apply server mention replacement
+            if (chatMessage.server.enabled && chatMessage.server.trigger) {
+                previewText = previewText.replace(new RegExp(chatMessage.server.trigger, 'g'), '@server');
+            }
+
+            // Apply bold formatting
+            if (chatMessage.bold.enabled && chatMessage.bold.trigger) {
+                previewText = previewText.replace(new RegExp(chatMessage.bold.trigger, 'g'), `**${chatMessage.bold.trigger}**`);
+            }
+
+            // Apply italic formatting
+            if (chatMessage.italic.enabled && chatMessage.italic.trigger) {
+                previewText = previewText.replace(new RegExp(chatMessage.italic.trigger, 'g'), `*${chatMessage.italic.trigger}*`);
+            }
+
+            // Apply count replacement
+            if (chatMessage.count.enabled && chatMessage.count.trigger) {
+                previewText = previewText.replace(new RegExp(chatMessage.count.trigger, 'g'), '123');
+            }
+
+            // Apply Discord-style formatting for preview
+            let htmlPreview = previewText
+                .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+                .replace(/\*(.*?)\*/g, '<em>$1</em>')
+                .replace(/@member/g, '<span style="color: #5865F2; font-weight: 600;">@member</span>');
+
+            document.getElementById('discord-chat-preview').innerHTML = htmlPreview;
+        }
 
         // Canvas Drawing
         function redrawCanvas() {
@@ -994,11 +1243,11 @@
                 }
             }
 
-            // Draw message text
-            ctx.font = `${message.fontSize}px 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif`;
-            ctx.fillStyle = message.color;
+            // Draw canvas text
+            ctx.font = `${canvasText.fontSize}px 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif`;
+            ctx.fillStyle = canvasText.color;
             ctx.textAlign = 'center';
-            ctx.fillText(message.content, message.x, message.y);
+            ctx.fillText(canvasText.content, canvasText.x, canvasText.y);
 
             // Draw username text
             ctx.font = `bold ${text.fontSize}px 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif`;
@@ -1058,6 +1307,18 @@
                    pos.y <= text.y;
         }
 
+        function isInsideCanvasText(pos) {
+            ctx.font = `${canvasText.fontSize}px 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif`;
+            const metrics = ctx.measureText(canvasText.content);
+            const textWidth = metrics.width;
+            const textHeight = canvasText.fontSize;
+            
+            return pos.x >= canvasText.x - textWidth / 2 && 
+                   pos.x <= canvasText.x + textWidth / 2 &&
+                   pos.y >= canvasText.y - textHeight && 
+                   pos.y <= canvasText.y;
+        }
+
         canvas.addEventListener('mousedown', handleStart);
         canvas.addEventListener('touchstart', handleStart);
         canvas.addEventListener('mousemove', handleMove);
@@ -1084,6 +1345,13 @@
                     x: pos.x - text.x,
                     y: pos.y - text.y
                 };
+            } else if (isInsideCanvasText(pos)) {
+                isDragging = true;
+                dragTarget = 'canvasText';
+                dragOffset = {
+                    x: pos.x - canvasText.x,
+                    y: pos.y - canvasText.y
+                };
             }
         }
 
@@ -1109,6 +1377,14 @@
                 document.getElementById('textXValue').textContent = Math.round(text.x);
                 document.getElementById('textY').value = Math.round(text.y);
                 document.getElementById('textYValue').textContent = Math.round(text.y);
+            } else if (dragTarget === 'canvasText') {
+                canvasText.x = Math.max(0, Math.min(canvas.width, pos.x - dragOffset.x));
+                canvasText.y = Math.max(canvasText.fontSize, Math.min(canvas.height, pos.y - dragOffset.y));
+                
+                document.getElementById('messageX').value = Math.round(canvasText.x);
+                document.getElementById('messageXValue').textContent = Math.round(canvasText.x);
+                document.getElementById('messageY').value = Math.round(canvasText.y);
+                document.getElementById('messageYValue').textContent = Math.round(canvasText.y);
             }
             
             updateLiveCoordinates();
@@ -1138,17 +1414,45 @@
                     y: Math.round(avatar.y),
                     radius: avatar.radius
                 },
-                text: {
+                username: {
                     x: Math.round(text.x),
                     y: Math.round(text.y),
                     font_size: text.fontSize,
                     color: text.color
                 },
-                message: {
-                    x: Math.round(message.x),
-                    y: Math.round(message.y),
-                    font_size: message.fontSize,
-                    color: message.color
+                canvas_text: {
+                    text: canvasText.content,
+                    x: Math.round(canvasText.x),
+                    y: Math.round(canvasText.y),
+                    font_size: canvasText.fontSize,
+                    color: canvasText.color
+                },
+                chat_message: {
+                    text: document.getElementById('chat-message-text').value,
+                    mention: {
+                        enabled: document.getElementById('toggle-mention').checked,
+                        trigger: document.getElementById('mention-trigger').value
+                    },
+                    owner: {
+                        enabled: document.getElementById('toggle-owner').checked,
+                        trigger: document.getElementById('owner-trigger').value
+                    },
+                    server: {
+                        enabled: document.getElementById('toggle-server').checked,
+                        trigger: document.getElementById('server-trigger').value
+                    },
+                    bold: {
+                        enabled: document.getElementById('toggle-bold').checked,
+                        trigger: document.getElementById('bold-trigger').value
+                    },
+                    italic: {
+                        enabled: document.getElementById('toggle-italic').checked,
+                        trigger: document.getElementById('italic-trigger').value
+                    },
+                    count: {
+                        enabled: document.getElementById('toggle-count').checked,
+                        trigger: document.getElementById('count-trigger').value
+                    }
                 }
             };
 
@@ -1228,6 +1532,7 @@
         // Initial draw
         redrawCanvas();
         updateLiveCoordinates();
+        updateChatPreview();
     </script>
 </body>
 </html>
