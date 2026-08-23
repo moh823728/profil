@@ -804,10 +804,10 @@
                         <!-- Member Mention -->
                         <div style="background: rgba(30, 31, 34, 0.6); padding: 15px; border-radius: 8px; border: 1px solid rgba(255, 255, 255, 0.05);">
                             <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px;">
-                                <input type="checkbox" id="toggle-mention" checked style="width: 18px; height: 18px; cursor: pointer;">
+                                <input type="checkbox" id="toggle-mention" style="width: 18px; height: 18px; cursor: pointer;">
                                 <label for="toggle-mention" style="margin: 0; cursor: pointer; font-weight: 500;">👤 منشن العضو</label>
                             </div>
-                            <input type="text" id="mention-trigger" value="{mention}" placeholder="رمز المنشن مثل {mention}" style="width: 100%; padding: 10px; background: rgba(30, 31, 34, 0.8); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 6px; color: white; font-size: 13px;">
+                            <input type="text" id="mention-trigger" value="" placeholder="رمز المنشن مثل {mention}" style="width: 100%; padding: 10px; background: rgba(30, 31, 34, 0.8); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 6px; color: white; font-size: 13px;">
                         </div>
 
                         <!-- Owner Mention -->
@@ -816,7 +816,7 @@
                                 <input type="checkbox" id="toggle-owner" style="width: 18px; height: 18px; cursor: pointer;">
                                 <label for="toggle-owner" style="margin: 0; cursor: pointer; font-weight: 500;">👑 منشن المالك</label>
                             </div>
-                            <input type="text" id="owner-trigger" value="{owner}" placeholder="رمز المالك مثل {owner}" style="width: 100%; padding: 10px; background: rgba(30, 31, 34, 0.8); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 6px; color: white; font-size: 13px;">
+                            <input type="text" id="owner-trigger" value="" placeholder="رمز المالك مثل {owner}" style="width: 100%; padding: 10px; background: rgba(30, 31, 34, 0.8); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 6px; color: white; font-size: 13px;">
                         </div>
 
                         <!-- Server/Help Tag -->
@@ -831,10 +831,10 @@
                         <!-- Bold Text -->
                         <div style="background: rgba(30, 31, 34, 0.6); padding: 15px; border-radius: 8px; border: 1px solid rgba(255, 255, 255, 0.05);">
                             <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px;">
-                                <input type="checkbox" id="toggle-bold" checked style="width: 18px; height: 18px; cursor: pointer;">
+                                <input type="checkbox" id="toggle-bold" style="width: 18px; height: 18px; cursor: pointer;">
                                 <label for="toggle-bold" style="margin: 0; cursor: pointer; font-weight: 500;">🔤 نص عريض</label>
                             </div>
-                            <input type="text" id="bold-trigger" value="السيرفر" placeholder="الكلمة المراد تكبيرها" style="width: 100%; padding: 10px; background: rgba(30, 31, 34, 0.8); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 6px; color: white; font-size: 13px;">
+                            <input type="text" id="bold-trigger" value="" placeholder="الكلمة المراد تكبيرها" style="width: 100%; padding: 10px; background: rgba(30, 31, 34, 0.8); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 6px; color: white; font-size: 13px;">
                         </div>
 
                         <!-- Italic Text -->
@@ -852,9 +852,22 @@
                                 <input type="checkbox" id="toggle-count" style="width: 18px; height: 18px; cursor: pointer;">
                                 <label for="toggle-count" style="margin: 0; cursor: pointer; font-weight: 500;">📊 عدد الأعضاء</label>
                             </div>
-                            <input type="text" id="count-trigger" value="{count}" placeholder="رمز العدد مثل {count}" style="width: 100%; padding: 10px; background: rgba(30, 31, 34, 0.8); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 6px; color: white; font-size: 13px;">
+                            <input type="text" id="count-trigger" value="" placeholder="رمز العدد مثل {count}" style="width: 100%; padding: 10px; background: rgba(30, 31, 34, 0.8); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 6px; color: white; font-size: 13px;">
                         </div>
                     </div>
+                </div>
+
+                <!-- Dynamic Channel Shortcuts -->
+                <div class="control-group">
+                    <label>🔗 اختصارات الرومات:</label>
+                    <div id="channel-shortcuts-container" style="display: flex; flex-direction: column; gap: 10px;">
+                        <!-- Initial channel shortcut row -->
+                        <div class="channel-shortcut-row" style="display: flex; gap: 10px; align-items: center; background: rgba(30, 31, 34, 0.6); padding: 15px; border-radius: 8px; border: 1px solid rgba(255, 255, 255, 0.05);">
+                            <input type="text" class="channel-id-input" placeholder="رابط أو آيدي الروم" style="flex: 2; padding: 10px; background: rgba(30, 31, 34, 0.8); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 6px; color: white; font-size: 13px;">
+                            <input type="text" class="channel-shortcut-input" placeholder="رمز الاختصار" style="flex: 1; padding: 10px; background: rgba(30, 31, 34, 0.8); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 6px; color: white; font-size: 13px;">
+                        </div>
+                    </div>
+                    <button type="button" onclick="addChannelShortcut()" style="margin-top: 10px; padding: 10px 15px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 14px; font-weight: 600;">+ إضافة روم</button>
                 </div>
 
                 <!-- Discord Chat Preview -->
@@ -959,20 +972,20 @@
         const chatMessage = {
             text: 'مرحباً بك يا 1 في السيرفر!',
             mention: {
-                enabled: true,
-                trigger: '{mention}'
+                enabled: false,
+                trigger: ''
             },
             owner: {
                 enabled: false,
-                trigger: '{owner}'
+                trigger: ''
             },
             server: {
                 enabled: false,
                 trigger: ''
             },
             bold: {
-                enabled: true,
-                trigger: 'السيرفر'
+                enabled: false,
+                trigger: ''
             },
             italic: {
                 enabled: false,
@@ -980,8 +993,9 @@
             },
             count: {
                 enabled: false,
-                trigger: '{count}'
-            }
+                trigger: ''
+            },
+            channel_shortcuts: []
         };
 
         // Tab Navigation
@@ -1015,6 +1029,16 @@
                     const img = new Image();
                     img.onload = () => {
                         backgroundImage = img;
+                        // Resize canvas to match original image dimensions
+                        canvas.width = img.naturalWidth;
+                        canvas.height = img.naturalHeight;
+                        // Update slider ranges to match new canvas dimensions
+                        document.getElementById('avatarX').max = canvas.width;
+                        document.getElementById('avatarY').max = canvas.height;
+                        document.getElementById('textX').max = canvas.width;
+                        document.getElementById('textY').max = canvas.height;
+                        document.getElementById('messageX').max = canvas.width;
+                        document.getElementById('messageY').max = canvas.height;
                         redrawCanvas();
                     };
                     img.src = event.target.result;
@@ -1204,6 +1228,13 @@
                 previewText = previewText.replace(new RegExp(chatMessage.count.trigger, 'g'), '123');
             }
 
+            // Apply channel shortcuts
+            chatMessage.channel_shortcuts.forEach(shortcut => {
+                if (shortcut.shortcut && shortcut.channel_id) {
+                    previewText = previewText.replace(new RegExp(shortcut.shortcut, 'g'), `<#${shortcut.channel_id}>`);
+                }
+            });
+
             // Apply Discord-style formatting for preview
             let htmlPreview = previewText
                 .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
@@ -1212,6 +1243,79 @@
 
             document.getElementById('discord-chat-preview').innerHTML = htmlPreview;
         }
+
+        // Channel Shortcuts Management
+        function addChannelShortcut() {
+            const container = document.getElementById('channel-shortcuts-container');
+            const newRow = document.createElement('div');
+            newRow.className = 'channel-shortcut-row';
+            newRow.style = 'display: flex; gap: 10px; align-items: center; background: rgba(30, 31, 34, 0.6); padding: 15px; border-radius: 8px; border: 1px solid rgba(255, 255, 255, 0.05);';
+            newRow.innerHTML = `
+                <input type="text" class="channel-id-input" placeholder="رابط أو آيدي الروم" style="flex: 2; padding: 10px; background: rgba(30, 31, 34, 0.8); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 6px; color: white; font-size: 13px;">
+                <input type="text" class="channel-shortcut-input" placeholder="رمز الاختصار" style="flex: 1; padding: 10px; background: rgba(30, 31, 34, 0.8); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 6px; color: white; font-size: 13px;">
+                <button type="button" onclick="removeChannelShortcut(this)" style="padding: 8px 12px; background: rgba(200, 50, 50, 0.8); color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 12px;">- إزالة</button>
+            `;
+            container.appendChild(newRow);
+            
+            // Add event listeners to new inputs
+            const channelIdInput = newRow.querySelector('.channel-id-input');
+            const shortcutInput = newRow.querySelector('.channel-shortcut-input');
+            
+            channelIdInput.addEventListener('input', updateChannelShortcuts);
+            shortcutInput.addEventListener('input', updateChannelShortcuts);
+        }
+
+        function removeChannelShortcut(button) {
+            const row = button.closest('.channel-shortcut-row');
+            row.remove();
+            updateChannelShortcuts();
+        }
+
+        function updateChannelShortcuts() {
+            const rows = document.querySelectorAll('.channel-shortcut-row');
+            chatMessage.channel_shortcuts = [];
+            
+            rows.forEach(row => {
+                const channelIdInput = row.querySelector('.channel-id-input');
+                const shortcutInput = row.querySelector('.channel-shortcut-input');
+                
+                let channelId = channelIdInput.value.trim();
+                const shortcut = shortcutInput.value.trim();
+                
+                // Extract channel ID from Discord link if provided
+                if (channelId.includes('discord.com/channels/') || channelId.includes('discord.gg/')) {
+                    const match = channelId.match(/(\d{18,19})/);
+                    if (match) {
+                        channelId = match[1];
+                    }
+                }
+                
+                if (channelId && shortcut) {
+                    chatMessage.channel_shortcuts.push({
+                        channel_id: channelId,
+                        shortcut: shortcut
+                    });
+                }
+            });
+            
+            updateChatPreview();
+        }
+
+        // Add event listeners to initial channel shortcut inputs
+        document.addEventListener('DOMContentLoaded', () => {
+            const initialRow = document.querySelector('.channel-shortcut-row');
+            if (initialRow) {
+                const channelIdInput = initialRow.querySelector('.channel-id-input');
+                const shortcutInput = initialRow.querySelector('.channel-shortcut-input');
+                
+                if (channelIdInput) {
+                    channelIdInput.addEventListener('input', updateChannelShortcuts);
+                }
+                if (shortcutInput) {
+                    shortcutInput.addEventListener('input', updateChannelShortcuts);
+                }
+            }
+        });
 
         // Canvas Drawing
         function redrawCanvas() {
@@ -1452,7 +1556,8 @@
                     count: {
                         enabled: document.getElementById('toggle-count').checked,
                         trigger: document.getElementById('count-trigger').value
-                    }
+                    },
+                    channel_shortcuts: chatMessage.channel_shortcuts
                 }
             };
 
