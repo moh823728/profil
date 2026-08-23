@@ -1699,55 +1699,39 @@
 
         // Save and Show Coordinates
         function saveAndShowCoordinates() {
-            // Get canvas display dimensions (CSS size) and natural dimensions (actual image resolution)
-            const rect = canvas.getBoundingClientRect();
-            const displayedWidth = rect.width;
-            const displayedHeight = rect.height;
-            const naturalWidth = canvas.width;
-            const naturalHeight = canvas.height;
+            // Get current canvas dimensions
+            const canvasWidth = canvas.clientWidth || canvas.width;
+            const canvasHeight = canvas.clientHeight || canvas.height;
 
-            // Calculate scaling ratio
-            const scaleX = naturalWidth / displayedWidth;
-            const scaleY = naturalHeight / displayedHeight;
+            // Calculate percentages relative to current canvas dimensions (0-100%)
+            const avatar_x_pct = Number(((avatar.x / canvasWidth) * 100).toFixed(2));
+            const avatar_y_pct = Number(((avatar.y / canvasHeight) * 100).toFixed(2));
+            const avatar_r_pct = Number(((avatar.radius / canvasWidth) * 100).toFixed(2));
 
-            // Convert CSS display coordinates to natural image resolution coordinates
-            const real_avatar_x = avatar.x * scaleX;
-            const real_avatar_y = avatar.y * scaleY;
-            const real_avatar_radius = avatar.radius * scaleX;
+            const username_x_pct = Number(((text.x / canvasWidth) * 100).toFixed(2));
+            const username_y_pct = Number(((text.y / canvasHeight) * 100).toFixed(2));
 
-            const real_text_x = text.x * scaleX;
-            const real_text_y = text.y * scaleY;
-
-            const real_canvas_text_x = canvasText.x * scaleX;
-            const real_canvas_text_y = canvasText.y * scaleY;
-
-            // Convert to percentage-based coordinates (0-100) with fallback values
-            const avatar_x_pct = (real_avatar_x / naturalWidth) * 100 || 50;
-            const avatar_y_pct = (real_avatar_y / naturalHeight) * 100 || 50;
-            const avatar_r_pct = (real_avatar_radius / naturalWidth) * 100 || 25;
-            const text_x_pct = (real_text_x / naturalWidth) * 100 || 50;
-            const text_y_pct = (real_text_y / naturalHeight) * 100 || 50;
-            const canvas_text_x_pct = (real_canvas_text_x / naturalWidth) * 100 || 50;
-            const canvas_text_y_pct = (real_canvas_text_y / naturalHeight) * 100 || 50;
+            const canvas_text_x_pct = Number(((canvasText.x / canvasWidth) * 100).toFixed(2));
+            const canvas_text_y_pct = Number(((canvasText.y / canvasHeight) * 100).toFixed(2));
 
             const coordinates = {
                 avatar: {
-                    x_pct: parseFloat(avatar_x_pct.toFixed(2)),
-                    y_pct: parseFloat(avatar_y_pct.toFixed(2)),
-                    r_pct: parseFloat(avatar_r_pct.toFixed(2)),
+                    x_pct: avatar_x_pct,
+                    y_pct: avatar_y_pct,
+                    r_pct: avatar_r_pct,
                     show: imageLayers.show_avatar
                 },
                 username: {
-                    x_pct: parseFloat(text_x_pct.toFixed(2)),
-                    y_pct: parseFloat(text_y_pct.toFixed(2)),
+                    x_pct: username_x_pct,
+                    y_pct: username_y_pct,
                     font_size: text.fontSize,
                     color: text.color,
                     show: imageLayers.show_username
                 },
                 canvas_text: {
                     text: canvasText.content,
-                    x_pct: parseFloat(canvas_text_x_pct.toFixed(2)),
-                    y_pct: parseFloat(canvas_text_y_pct.toFixed(2)),
+                    x_pct: canvas_text_x_pct,
+                    y_pct: canvas_text_y_pct,
                     font_size: canvasText.fontSize,
                     color: canvasText.color,
                     show: imageLayers.show_canvas_text
