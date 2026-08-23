@@ -1732,11 +1732,11 @@
 
         // Save and Show Coordinates
         function saveAndShowCoordinates() {
-            // Get current canvas dimensions
-            const canvasWidth = canvas.clientWidth || canvas.width;
-            const canvasHeight = canvas.clientHeight || canvas.height;
+            // Get actual canvas dimensions (not display size)
+            const canvasWidth = canvas.width;
+            const canvasHeight = canvas.height;
 
-            // Calculate percentages relative to current canvas dimensions (0-100%)
+            // Calculate percentages relative to actual canvas dimensions (0-100%)
             const avatar_x_pct = Number(((avatar.x / canvasWidth) * 100).toFixed(2));
             const avatar_y_pct = Number(((avatar.y / canvasHeight) * 100).toFixed(2));
             const avatar_r_pct = Number(((avatar.radius / canvasWidth) * 100).toFixed(2));
