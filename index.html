@@ -1721,24 +1721,33 @@
             const real_canvas_text_x = canvasText.x * scaleX;
             const real_canvas_text_y = canvasText.y * scaleY;
 
+            // Convert to percentage-based coordinates (0-100)
+            const avatar_x_pct = (real_avatar_x / naturalWidth) * 100;
+            const avatar_y_pct = (real_avatar_y / naturalHeight) * 100;
+            const avatar_r_pct = (real_avatar_radius / naturalWidth) * 100;
+            const text_x_pct = (real_text_x / naturalWidth) * 100;
+            const text_y_pct = (real_text_y / naturalHeight) * 100;
+            const canvas_text_x_pct = (real_canvas_text_x / naturalWidth) * 100;
+            const canvas_text_y_pct = (real_canvas_text_y / naturalHeight) * 100;
+
             const coordinates = {
                 avatar: {
-                    x: Math.round(real_avatar_x),
-                    y: Math.round(real_avatar_y),
-                    radius: Math.round(real_avatar_radius),
+                    x_pct: parseFloat(avatar_x_pct.toFixed(2)),
+                    y_pct: parseFloat(avatar_y_pct.toFixed(2)),
+                    r_pct: parseFloat(avatar_r_pct.toFixed(2)),
                     show: imageLayers.show_avatar
                 },
                 username: {
-                    x: Math.round(real_text_x),
-                    y: Math.round(real_text_y),
+                    x_pct: parseFloat(text_x_pct.toFixed(2)),
+                    y_pct: parseFloat(text_y_pct.toFixed(2)),
                     font_size: text.fontSize,
                     color: text.color,
                     show: imageLayers.show_username
                 },
                 canvas_text: {
                     text: canvasText.content,
-                    x: Math.round(real_canvas_text_x),
-                    y: Math.round(real_canvas_text_y),
+                    x_pct: parseFloat(canvas_text_x_pct.toFixed(2)),
+                    y_pct: parseFloat(canvas_text_y_pct.toFixed(2)),
                     font_size: canvasText.fontSize,
                     color: canvasText.color,
                     show: imageLayers.show_canvas_text
