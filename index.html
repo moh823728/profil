@@ -1541,26 +1541,30 @@
                 }
             }
 
-            // Draw canvas text (only if toggle is enabled)
+            // Draw canvas text (only if toggle is enabled) - CENTER ANCHOR to match PIL anchor="mm"
             if (imageLayers.show_canvas_text) {
                 ctx.font = `${canvasText.fontSize}px 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif`;
                 ctx.fillStyle = canvasText.color;
                 ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle'; // Match PIL anchor="mm" (middle-middle)
                 ctx.fillText(canvasText.content, canvasText.x, canvasText.y);
             }
 
-            // Draw username text (only if toggle is enabled)
+            // Draw username text (only if toggle is enabled) - CENTER ANCHOR to match PIL anchor="mm"
             if (imageLayers.show_username) {
                 ctx.font = `bold ${text.fontSize}px 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif`;
                 ctx.fillStyle = text.color;
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle'; // Match PIL anchor="mm" (middle-middle)
                 ctx.fillText(text.content, text.x, text.y);
             }
 
-            // Draw avatar circle (only if toggle is enabled)
+            // Draw avatar circle (only if toggle is enabled) - CENTER COORDINATES to match PIL
             if (imageLayers.show_avatar) {
-                // Calculate top-left position for centered circular crop
+                // Calculate top-left position for centered circular crop (PIL logic: center - radius)
                 const top_left_x = avatar.x - avatar.radius;
                 const top_left_y = avatar.y - avatar.radius;
+                const diameter = avatar.radius * 2;
                 
                 // Create circular clipping path for proper center fit
                 ctx.save();
@@ -1571,9 +1575,9 @@
                 
                 // Draw avatar background
                 ctx.fillStyle = '#5865F2';
-                ctx.fillRect(top_left_x, top_left_y, avatar.radius * 2, avatar.radius * 2);
+                ctx.fillRect(top_left_x, top_left_y, diameter, diameter);
                 
-                // Draw avatar placeholder icon (centered)
+                // Draw avatar placeholder icon (centered at center coordinates)
                 ctx.fillStyle = '#ffffff';
                 ctx.font = `${avatar.radius}px Arial`;
                 ctx.textAlign = 'center';
@@ -1621,10 +1625,11 @@
             const textWidth = metrics.width;
             const textHeight = text.fontSize;
             
+            // Hit detection based on center coordinates (match PIL anchor="mm")
             return pos.x >= text.x - textWidth / 2 && 
                    pos.x <= text.x + textWidth / 2 &&
-                   pos.y >= text.y - textHeight && 
-                   pos.y <= text.y;
+                   pos.y >= text.y - textHeight / 2 && 
+                   pos.y <= text.y + textHeight / 2;
         }
 
         function isInsideCanvasText(pos) {
@@ -1633,10 +1638,11 @@
             const textWidth = metrics.width;
             const textHeight = canvasText.fontSize;
             
+            // Hit detection based on center coordinates (match PIL anchor="mm")
             return pos.x >= canvasText.x - textWidth / 2 && 
                    pos.x <= canvasText.x + textWidth / 2 &&
-                   pos.y >= canvasText.y - textHeight && 
-                   pos.y <= canvasText.y;
+                   pos.y >= canvasText.y - textHeight / 2 && 
+                   pos.y <= canvasText.y + textHeight / 2;
         }
 
         canvas.addEventListener('mousedown', handleStart);
@@ -1693,7 +1699,7 @@
                 document.getElementById('avatarYValue').textContent = Math.round(avatar.y);
             } else if (dragTarget === 'text') {
                 text.x = Math.max(0, Math.min(canvas.width, pos.x - dragOffset.x));
-                text.y = Math.max(text.fontSize, Math.min(canvas.height, pos.y - dragOffset.y));
+                text.y = Math.max(0, Math.min(canvas.height, pos.y - dragOffset.y));
                 
                 document.getElementById('textX').value = Math.round(text.x);
                 document.getElementById('textXNum').value = Math.round(text.x);
@@ -1703,7 +1709,7 @@
                 document.getElementById('textYValue').textContent = Math.round(text.y);
             } else if (dragTarget === 'canvasText') {
                 canvasText.x = Math.max(0, Math.min(canvas.width, pos.x - dragOffset.x));
-                canvasText.y = Math.max(canvasText.fontSize, Math.min(canvas.height, pos.y - dragOffset.y));
+                canvasText.y = Math.max(0, Math.min(canvas.height, pos.y - dragOffset.y));
                 
                 document.getElementById('messageX').value = Math.round(canvasText.x);
                 document.getElementById('messageXNum').value = Math.round(canvasText.x);
