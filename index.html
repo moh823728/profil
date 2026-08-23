@@ -748,8 +748,8 @@
                 <div class="control-group">
                     <label>نصف القطر: <span class="slider-value" id="avatarRadiusValue">50</span></label>
                     <div style="display: flex; gap: 10px; align-items: center;">
-                        <input type="range" id="avatarRadius" class="range-slider" min="20" max="1000" value="50" style="flex: 1;">
-                        <input type="number" id="avatarRadiusNum" value="50" min="20" max="1000" style="width: 80px; padding: 8px; background: rgba(30, 31, 34, 0.8); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 6px; color: white; font-size: 13px;">
+                        <input type="range" id="avatarRadius" class="range-slider" min="20" max="500" value="50" style="flex: 1;">
+                        <input type="number" id="avatarRadiusNum" value="50" min="20" max="500" style="width: 80px; padding: 8px; background: rgba(30, 31, 34, 0.8); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 6px; color: white; font-size: 13px;">
                     </div>
                 </div>
             </div>
@@ -993,9 +993,9 @@
 
         // Elements state
         const avatar = {
-            x: 100, // Will be set to 50.17% of canvas width after image load
-            y: 100, // Will be set to 72.16% of canvas height after image load
-            radius: 50 // Will be set to 16.5% of canvas width after image load
+            x: 100, // Will be set to center after image load
+            y: 100, // Will be set to center after image load
+            radius: 50 // Will be set based on canvas size after image load
         };
 
         const text = {
@@ -1085,22 +1085,24 @@
                         canvas.width = img.naturalWidth;
                         canvas.height = img.naturalHeight;
                         
-                        // Set avatar to absolute center position in pixels: (50.17%, 72.16%)
-                        avatar.x = Math.round(canvas.width * 0.5017);
-                        avatar.y = Math.round(canvas.height * 0.7216);
-                        avatar.radius = Math.round(canvas.width * 0.165); // 16.5% radius for 320px diameter on standard 1920px width
+                        // Set avatar to absolute center position in pixels (no percentage calculations)
+                        // Default to center of canvas if no previous position
+                        avatar.x = Math.round(canvas.width / 2);
+                        avatar.y = Math.round(canvas.height / 2);
+                        avatar.radius = Math.round(Math.min(canvas.width, canvas.height) * 0.1); // 10% of smaller dimension
                         
                         // Update slider ranges to match EXACT canvas dimensions
                         const maxWidth = canvas.width;
                         const maxHeight = canvas.height;
+                        const maxRadius = Math.max(maxWidth, maxHeight);
                         
                         // Avatar sliders
                         document.getElementById('avatarX').max = maxWidth;
                         document.getElementById('avatarXNum').max = maxWidth;
                         document.getElementById('avatarY').max = maxHeight;
                         document.getElementById('avatarYNum').max = maxHeight;
-                        document.getElementById('avatarRadius').max = 1000;
-                        document.getElementById('avatarRadiusNum').max = 1000;
+                        document.getElementById('avatarRadius').max = maxRadius;
+                        document.getElementById('avatarRadiusNum').max = maxRadius;
                         
                         // Update avatar control values to match new position
                         document.getElementById('avatarX').value = avatar.x;
