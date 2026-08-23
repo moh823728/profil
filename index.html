@@ -993,9 +993,9 @@
 
         // Elements state
         const avatar = {
-            x: 100,
-            y: 100,
-            radius: 50
+            x: 100, // Will be set to 50.17% of canvas width after image load
+            y: 100, // Will be set to 72.16% of canvas height after image load
+            radius: 50 // Will be set to 16.5% of canvas width after image load
         };
 
         const text = {
@@ -1085,6 +1085,11 @@
                         canvas.width = img.naturalWidth;
                         canvas.height = img.naturalHeight;
                         
+                        // Set avatar to absolute center position: (50.17%, 72.16%)
+                        avatar.x = Math.round(canvas.width * 0.5017);
+                        avatar.y = Math.round(canvas.height * 0.7216);
+                        avatar.radius = Math.round(canvas.width * 0.165); // 16.5% radius for 320px diameter on standard 1920px width
+                        
                         // Update slider ranges to match new canvas dimensions (with minimum 4000px for high-res)
                         const maxWidth = Math.max(canvas.width, 4000);
                         const maxHeight = Math.max(canvas.height, 4000);
@@ -1096,6 +1101,17 @@
                         document.getElementById('avatarYNum').max = maxHeight;
                         document.getElementById('avatarRadius').max = 1000;
                         document.getElementById('avatarRadiusNum').max = 1000;
+                        
+                        // Update avatar control values to match new position
+                        document.getElementById('avatarX').value = avatar.x;
+                        document.getElementById('avatarXNum').value = avatar.x;
+                        document.getElementById('avatarXValue').textContent = avatar.x;
+                        document.getElementById('avatarY').value = avatar.y;
+                        document.getElementById('avatarYNum').value = avatar.y;
+                        document.getElementById('avatarYValue').textContent = avatar.y;
+                        document.getElementById('avatarRadius').value = avatar.radius;
+                        document.getElementById('avatarRadiusNum').value = avatar.radius;
+                        document.getElementById('avatarRadiusValue').textContent = avatar.radius;
                         
                         // Username sliders
                         document.getElementById('textX').max = maxWidth;
@@ -1114,6 +1130,7 @@
                         document.getElementById('messageFontSizeNum').max = 200;
                         
                         redrawCanvas();
+                        updateLiveCoordinates();
                     };
                     img.src = event.target.result;
                 };
@@ -1539,20 +1556,36 @@
 
             // Draw avatar circle (only if toggle is enabled)
             if (imageLayers.show_avatar) {
+                // Calculate top-left position for centered circular crop
+                const top_left_x = avatar.x - avatar.radius;
+                const top_left_y = avatar.y - avatar.radius;
+                
+                // Create circular clipping path for proper center fit
+                ctx.save();
                 ctx.beginPath();
                 ctx.arc(avatar.x, avatar.y, avatar.radius, 0, Math.PI * 2);
+                ctx.closePath();
+                ctx.clip();
+                
+                // Draw avatar background
                 ctx.fillStyle = '#5865F2';
-                ctx.fill();
-                ctx.strokeStyle = '#ffffff';
-                ctx.lineWidth = 3;
-                ctx.stroke();
-
-                // Draw avatar placeholder icon
+                ctx.fillRect(top_left_x, top_left_y, avatar.radius * 2, avatar.radius * 2);
+                
+                // Draw avatar placeholder icon (centered)
                 ctx.fillStyle = '#ffffff';
                 ctx.font = `${avatar.radius}px Arial`;
                 ctx.textAlign = 'center';
                 ctx.textBaseline = 'middle';
                 ctx.fillText('👤', avatar.x, avatar.y);
+                
+                ctx.restore();
+                
+                // Draw circular border
+                ctx.beginPath();
+                ctx.arc(avatar.x, avatar.y, avatar.radius, 0, Math.PI * 2);
+                ctx.strokeStyle = '#ffffff';
+                ctx.lineWidth = 3;
+                ctx.stroke();
             }
         }
 
