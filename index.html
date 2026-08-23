@@ -1645,22 +1645,44 @@
 
         // Save and Show Coordinates
         function saveAndShowCoordinates() {
+            // Get canvas display dimensions (CSS size) and natural dimensions (actual image resolution)
+            const rect = canvas.getBoundingClientRect();
+            const displayedWidth = rect.width;
+            const displayedHeight = rect.height;
+            const naturalWidth = canvas.width;
+            const naturalHeight = canvas.height;
+
+            // Calculate scaling ratio
+            const scaleX = naturalWidth / displayedWidth;
+            const scaleY = naturalHeight / displayedHeight;
+
+            // Convert CSS display coordinates to natural image resolution coordinates
+            const real_avatar_x = avatar.x * scaleX;
+            const real_avatar_y = avatar.y * scaleY;
+            const real_avatar_radius = avatar.radius * scaleX;
+
+            const real_text_x = text.x * scaleX;
+            const real_text_y = text.y * scaleY;
+
+            const real_canvas_text_x = canvasText.x * scaleX;
+            const real_canvas_text_y = canvasText.y * scaleY;
+
             const coordinates = {
                 avatar: {
-                    x: Math.round(avatar.x),
-                    y: Math.round(avatar.y),
-                    radius: avatar.radius
+                    x: Math.round(real_avatar_x),
+                    y: Math.round(real_avatar_y),
+                    radius: Math.round(real_avatar_radius)
                 },
                 username: {
-                    x: Math.round(text.x),
-                    y: Math.round(text.y),
+                    x: Math.round(real_text_x),
+                    y: Math.round(real_text_y),
                     font_size: text.fontSize,
                     color: text.color
                 },
                 canvas_text: {
                     text: canvasText.content,
-                    x: Math.round(canvasText.x),
-                    y: Math.round(canvasText.y),
+                    x: Math.round(real_canvas_text_x),
+                    y: Math.round(real_canvas_text_y),
                     font_size: canvasText.fontSize,
                     color: canvasText.color
                 },
