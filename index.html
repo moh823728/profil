@@ -857,7 +857,8 @@
                                 <input type="checkbox" id="toggle-mention" style="width: 18px; height: 18px; cursor: pointer;">
                                 <label for="toggle-mention" style="margin: 0; cursor: pointer; font-weight: 500;">👤 منشن العضو</label>
                             </div>
-                            <input type="text" id="mention-trigger" value="" placeholder="رمز المنشن مثل {mention}" style="width: 100%; padding: 10px; background: rgba(30, 31, 34, 0.8); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 6px; color: white; font-size: 13px;">
+                            <input type="text" id="mention-trigger" value="" placeholder="رمز المنشن مثل {mention}" style="width: 100%; padding: 10px; background: rgba(30, 31, 34, 0.8); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 6px; color: white; font-size: 13px; margin-bottom: 8px;">
+                            <input type="text" id="mention-user-id" value="" placeholder="معرف العضو (User ID) للبوت - سيتم استبداله بـ <@user_id>" style="width: 100%; padding: 10px; background: rgba(20, 21, 24, 0.8); border: 1px solid rgba(102, 126, 234, 0.3); border-radius: 6px; color: #667eea; font-size: 12px;">
                         </div>
 
                         <!-- Owner Mention -->
@@ -866,7 +867,8 @@
                                 <input type="checkbox" id="toggle-owner" style="width: 18px; height: 18px; cursor: pointer;">
                                 <label for="toggle-owner" style="margin: 0; cursor: pointer; font-weight: 500;">👑 منشن المالك</label>
                             </div>
-                            <input type="text" id="owner-trigger" value="" placeholder="رمز المالك مثل {owner}" style="width: 100%; padding: 10px; background: rgba(30, 31, 34, 0.8); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 6px; color: white; font-size: 13px;">
+                            <input type="text" id="owner-trigger" value="" placeholder="رمز المالك مثل {owner}" style="width: 100%; padding: 10px; background: rgba(30, 31, 34, 0.8); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 6px; color: white; font-size: 13px; margin-bottom: 8px;">
+                            <input type="text" id="owner-user-id" value="" placeholder="معرف المالك (User ID) للبوت - سيتم استبداله بـ <@owner_id>" style="width: 100%; padding: 10px; background: rgba(20, 21, 24, 0.8); border: 1px solid rgba(102, 126, 234, 0.3); border-radius: 6px; color: #667eea; font-size: 12px;">
                         </div>
 
                         <!-- Server/Help Tag -->
@@ -980,6 +982,12 @@
                     <div id="discord-chat-preview" style="background: rgba(30, 31, 34, 0.8); padding: 15px; border-radius: 8px; border: 1px solid rgba(255, 255, 255, 0.1); min-height: 100px; font-size: 14px; color: #dcddde; line-height: 1.4; word-break: break-word; max-width: 100%; overflow-wrap: break-word; white-space: pre-wrap;">
                         مرحباً بك يا @member في السيرفر!
                     </div>
+                    <div style="margin-top: 10px; padding: 10px; background: rgba(102, 126, 234, 0.1); border-radius: 6px; border: 1px solid rgba(102, 126, 234, 0.3); font-size: 12px; color: #a0a0a0;">
+                        <strong>ملاحظة للبوت:</strong> سيتم إرسال النص التالي للبوت مع الرموز التالية للاستبدال:
+                        <br>• <code>&lt;@member_id&gt;</code> → معرف العضو الفعلي
+                        <br>• <code>&lt;@owner_id&gt;</code> → معرف المالك الفعلي  
+                        <br>• <code>{member_count}</code> → عدد الأعضاء الفعلي
+                    </div>
                 </div>
             </div>
 
@@ -1077,11 +1085,13 @@
             text: 'مرحباً بك يا 1 في السيرفر!',
             mention: {
                 enabled: false,
-                trigger: ''
+                trigger: '',
+                user_id: ''
             },
             owner: {
                 enabled: false,
-                trigger: ''
+                trigger: '',
+                user_id: ''
             },
             server: {
                 enabled: false,
@@ -1415,6 +1425,11 @@
             updateChatPreview();
         });
 
+        document.getElementById('mention-user-id').addEventListener('input', (e) => {
+            chatMessage.mention.user_id = e.target.value;
+            updateChatPreview();
+        });
+
         document.getElementById('toggle-owner').addEventListener('change', (e) => {
             chatMessage.owner.enabled = e.target.checked;
             updateChatPreview();
@@ -1422,6 +1437,11 @@
 
         document.getElementById('owner-trigger').addEventListener('input', (e) => {
             chatMessage.owner.trigger = e.target.value;
+            updateChatPreview();
+        });
+
+        document.getElementById('owner-user-id').addEventListener('input', (e) => {
+            chatMessage.owner.user_id = e.target.value;
             updateChatPreview();
         });
 
@@ -1528,82 +1548,108 @@
         function applyMarkdownFormatting(text) {
             let result = text;
 
+            // Helper function to escape special regex characters
+            const escapeRegex = (str) => str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+
             // Apply mention replacement with space-protected regex boundaries
             if (chatMessage.mention.enabled && chatMessage.mention.trigger) {
-                const mentionRegex = new RegExp(`(?<=^|\\s)${chatMessage.mention.trigger}(?=\\s|$)`, 'g');
-                result = result.replace(mentionRegex, '@member');
+                const escapedTrigger = escapeRegex(chatMessage.mention.trigger);
+                const mentionRegex = new RegExp(`(?<=^|\\s)${escapedTrigger}(?=\\s|$)`, 'g');
+                // Use user ID if provided, otherwise use placeholder for bot to replace
+                if (chatMessage.mention.user_id) {
+                    result = result.replace(mentionRegex, `<@${chatMessage.mention.user_id}>`);
+                } else {
+                    result = result.replace(mentionRegex, '<@member_id>');
+                }
             }
 
             // Apply owner mention replacement with space-protected regex boundaries
             if (chatMessage.owner.enabled && chatMessage.owner.trigger) {
-                const ownerRegex = new RegExp(`(?<=^|\\s)${chatMessage.owner.trigger}(?=\\s|$)`, 'g');
-                result = result.replace(ownerRegex, '@owner');
+                const escapedTrigger = escapeRegex(chatMessage.owner.trigger);
+                const ownerRegex = new RegExp(`(?<=^|\\s)${escapedTrigger}(?=\\s|$)`, 'g');
+                // Use user ID if provided, otherwise use placeholder for bot to replace
+                if (chatMessage.owner.user_id) {
+                    result = result.replace(ownerRegex, `<@${chatMessage.owner.user_id}>`);
+                } else {
+                    result = result.replace(ownerRegex, '<@owner_id>');
+                }
             }
 
             // Apply server mention replacement with space-protected regex boundaries
             if (chatMessage.server.enabled && chatMessage.server.trigger) {
-                const serverRegex = new RegExp(`(?<=^|\\s)${chatMessage.server.trigger}(?=\\s|$)`, 'g');
+                const escapedTrigger = escapeRegex(chatMessage.server.trigger);
+                const serverRegex = new RegExp(`(?<=^|\\s)${escapedTrigger}(?=\\s|$)`, 'g');
                 result = result.replace(serverRegex, '@server');
             }
 
             // Apply header formatting with space-protected regex boundaries
             if (chatMessage.header.enabled && chatMessage.header.trigger) {
-                const headerRegex = new RegExp(`(?<=^|\\s)${chatMessage.header.trigger}(?=\\s|$)`, 'g');
+                const escapedTrigger = escapeRegex(chatMessage.header.trigger);
+                const headerRegex = new RegExp(`(?<=^|\\s)${escapedTrigger}(?=\\s|$)`, 'g');
                 result = result.replace(headerRegex, `# ${chatMessage.header.trigger}`);
             }
 
             // Apply bold formatting with space-protected regex boundaries
             if (chatMessage.bold.enabled && chatMessage.bold.trigger) {
-                const boldRegex = new RegExp(`(?<=^|\\s)${chatMessage.bold.trigger}(?=\\s|$)`, 'g');
+                const escapedTrigger = escapeRegex(chatMessage.bold.trigger);
+                const boldRegex = new RegExp(`(?<=^|\\s)${escapedTrigger}(?=\\s|$)`, 'g');
                 result = result.replace(boldRegex, `**${chatMessage.bold.trigger}**`);
             }
 
             // Apply italic formatting with space-protected regex boundaries
             if (chatMessage.italic.enabled && chatMessage.italic.trigger) {
-                const italicRegex = new RegExp(`(?<=^|\\s)${chatMessage.italic.trigger}(?=\\s|$)`, 'g');
+                const escapedTrigger = escapeRegex(chatMessage.italic.trigger);
+                const italicRegex = new RegExp(`(?<=^|\\s)${escapedTrigger}(?=\\s|$)`, 'g');
                 result = result.replace(italicRegex, `*${chatMessage.italic.trigger}*`);
             }
 
             // Apply underline formatting with space-protected regex boundaries
             if (chatMessage.underline.enabled && chatMessage.underline.trigger) {
-                const underlineRegex = new RegExp(`(?<=^|\\s)${chatMessage.underline.trigger}(?=\\s|$)`, 'g');
+                const escapedTrigger = escapeRegex(chatMessage.underline.trigger);
+                const underlineRegex = new RegExp(`(?<=^|\\s)${escapedTrigger}(?=\\s|$)`, 'g');
                 result = result.replace(underlineRegex, `__${chatMessage.underline.trigger}__`);
             }
 
             // Apply strikethrough formatting with space-protected regex boundaries
             if (chatMessage.strikethrough.enabled && chatMessage.strikethrough.trigger) {
-                const strikethroughRegex = new RegExp(`(?<=^|\\s)${chatMessage.strikethrough.trigger}(?=\\s|$)`, 'g');
+                const escapedTrigger = escapeRegex(chatMessage.strikethrough.trigger);
+                const strikethroughRegex = new RegExp(`(?<=^|\\s)${escapedTrigger}(?=\\s|$)`, 'g');
                 result = result.replace(strikethroughRegex, `~~${chatMessage.strikethrough.trigger}~~`);
             }
 
             // Apply spoiler formatting with space-protected regex boundaries
             if (chatMessage.spoiler.enabled && chatMessage.spoiler.trigger) {
-                const spoilerRegex = new RegExp(`(?<=^|\\s)${chatMessage.spoiler.trigger}(?=\\s|$)`, 'g');
+                const escapedTrigger = escapeRegex(chatMessage.spoiler.trigger);
+                const spoilerRegex = new RegExp(`(?<=^|\\s)${escapedTrigger}(?=\\s|$)`, 'g');
                 result = result.replace(spoilerRegex, `||${chatMessage.spoiler.trigger}||`);
             }
 
             // Apply quote formatting with space-protected regex boundaries
             if (chatMessage.quote.enabled && chatMessage.quote.trigger) {
-                const quoteRegex = new RegExp(`(?<=^|\\s)${chatMessage.quote.trigger}(?=\\s|$)`, 'g');
+                const escapedTrigger = escapeRegex(chatMessage.quote.trigger);
+                const quoteRegex = new RegExp(`(?<=^|\\s)${escapedTrigger}(?=\\s|$)`, 'g');
                 result = result.replace(quoteRegex, `> ${chatMessage.quote.trigger}`);
             }
 
             // Apply code formatting with space-protected regex boundaries
             if (chatMessage.code.enabled && chatMessage.code.trigger) {
-                const codeRegex = new RegExp(`(?<=^|\\s)${chatMessage.code.trigger}(?=\\s|$)`, 'g');
+                const escapedTrigger = escapeRegex(chatMessage.code.trigger);
+                const codeRegex = new RegExp(`(?<=^|\\s)${escapedTrigger}(?=\\s|$)`, 'g');
                 result = result.replace(codeRegex, `\`${chatMessage.code.trigger}\``);
             }
 
             // Apply count replacement with space-protected regex boundaries
             if (chatMessage.count.enabled && chatMessage.count.trigger) {
-                const countRegex = new RegExp(`(?<=^|\\s)${chatMessage.count.trigger}(?=\\s|$)`, 'g');
-                result = result.replace(countRegex, '{count}');
+                const escapedTrigger = escapeRegex(chatMessage.count.trigger);
+                const countRegex = new RegExp(`(?<=^|\\s)${escapedTrigger}(?=\\s|$)`, 'g');
+                result = result.replace(countRegex, '{member_count}');
             }
 
             // Apply channel shortcuts with space-protected regex boundaries
             chatMessage.channel_shortcuts.forEach(shortcut => {
                 if (shortcut.shortcut && shortcut.channel_id) {
-                    const channelRegex = new RegExp(`(?<=^|\\s)${shortcut.shortcut}(?=\\s|$)`, 'g');
+                    const escapedShortcut = escapeRegex(shortcut.shortcut);
+                    const channelRegex = new RegExp(`(?<=^|\\s)${escapedShortcut}(?=\\s|$)`, 'g');
                     result = result.replace(channelRegex, `<#${shortcut.channel_id}>`);
                 }
             });
@@ -1647,6 +1693,9 @@
                 // Quote (> text)
                 .replace(/^>\s+(.+)$/gm, '<div style="border-right: 4px solid #5865F2; padding-right: 15px; margin: 10px 0; background: rgba(88, 101, 242, 0.1); padding: 10px 15px; border-radius: 0 5px 5px 0;">$1</div>')
                 // Mentions
+                .replace(/<@member_id>/g, '<span style="color: #5865F2; font-weight: 600;">@member</span>')
+                .replace(/<@owner_id>/g, '<span style="color: #5865F2; font-weight: 600;">@owner</span>')
+                .replace(/<@(\d+)>/g, '<span style="color: #5865F2; font-weight: 600;">@user</span>')
                 .replace(/@member/g, '<span style="color: #5865F2; font-weight: 600;">@member</span>')
                 .replace(/@owner/g, '<span style="color: #5865F2; font-weight: 600;">@owner</span>')
                 .replace(/@server/g, '<span style="color: #5865F2; font-weight: 600;">@server</span>')
@@ -2033,11 +2082,13 @@
                     text: applyMarkdownFormatting(document.getElementById('chat-message-text').value),
                     mention: {
                         enabled: document.getElementById('toggle-mention').checked,
-                        trigger: document.getElementById('mention-trigger').value
+                        trigger: document.getElementById('mention-trigger').value,
+                        user_id: document.getElementById('mention-user-id').value
                     },
                     owner: {
                         enabled: document.getElementById('toggle-owner').checked,
-                        trigger: document.getElementById('owner-trigger').value
+                        trigger: document.getElementById('owner-trigger').value,
+                        user_id: document.getElementById('owner-user-id').value
                     },
                     server: {
                         enabled: document.getElementById('toggle-server').checked,
@@ -2077,7 +2128,8 @@
                     },
                     count: {
                         enabled: document.getElementById('toggle-count').checked,
-                        trigger: document.getElementById('count-trigger').value
+                        trigger: document.getElementById('count-trigger').value,
+                        placeholder: '{count}'
                     },
                     channel_shortcuts: chatMessage.channel_shortcuts
                 }
@@ -2160,6 +2212,86 @@
         redrawCanvas();
         updateLiveCoordinates();
         updateChatPreview();
+
+        // Debug function to test all markdown formatting
+        function testAllMarkdownFormatting() {
+            console.log('=== Discord Markdown Formatting Test ===');
+            
+            const testText = 'مرحباً بك يا {mention} في سيرفر {owner} روم {rules} عدد {count}';
+            
+            // Setup test data
+            chatMessage.text = testText;
+            chatMessage.mention.enabled = true;
+            chatMessage.mention.trigger = '{mention}';
+            chatMessage.mention.user_id = '123456789012345678';
+            
+            chatMessage.owner.enabled = true;
+            chatMessage.owner.trigger = '{owner}';
+            chatMessage.owner.user_id = '987654321098765432';
+            
+            chatMessage.server.enabled = true;
+            chatMessage.server.trigger = '{server}';
+            
+            chatMessage.header.enabled = true;
+            chatMessage.header.trigger = 'رائع';
+            
+            chatMessage.bold.enabled = true;
+            chatMessage.bold.trigger = 'مهم';
+            
+            chatMessage.italic.enabled = true;
+            chatMessage.italic.trigger = 'جميل';
+            
+            chatMessage.underline.enabled = true;
+            chatMessage.underline.trigger = 'تحت';
+            
+            chatMessage.strikethrough.enabled = true;
+            chatMessage.strikethrough.trigger = 'محذوف';
+            
+            chatMessage.spoiler.enabled = true;
+            chatMessage.spoiler.trigger = 'سري';
+            
+            chatMessage.quote.enabled = true;
+            chatMessage.quote.trigger = 'قال';
+            
+            chatMessage.code.enabled = true;
+            chatMessage.code.trigger = 'console.log';
+            
+            chatMessage.count.enabled = true;
+            chatMessage.count.trigger = '{count}';
+            
+            chatMessage.channel_shortcuts = [
+                { channel_id: '1536802834446549132', shortcut: '{rules}' }
+            ];
+            
+            const formattedText = applyMarkdownFormatting(testText);
+            console.log('Original text:', testText);
+            console.log('Formatted text:', formattedText);
+            console.log('Expected: مرحباً بك يا <@123456789012345678> في سيرفر <@987654321098765432> روم <#1536802834446549132> عدد {member_count}');
+            
+            // Test individual formatting
+            console.log('\n=== Individual Formatting Tests ===');
+            console.log('Header (#):', applyMarkdownFormatting('هذا #رائع نص'));
+            console.log('Bold (**):', applyMarkdownFormatting('هذا **مهم** نص'));
+            console.log('Italic (*):', applyMarkdownFormatting('هذا *جميل* نص'));
+            console.log('Underline (__):', applyMarkdownFormatting('هذا __تحت__ نص'));
+            console.log('Strikethrough (~~):', applyMarkdownFormatting('هذا ~~محذوف~~ نص'));
+            console.log('Spoiler (||):', applyMarkdownFormatting('هذا ||سري|| نص'));
+            console.log('Quote (>):', applyMarkdownFormatting('هذا >قال نص'));
+            console.log('Code (`):', applyMarkdownFormatting('هذا `console.log` نص'));
+            
+            console.log('\n=== Channel Shortcut Test ===');
+            const channelTest = 'انضم لروم {rules} وروم {general}';
+            chatMessage.channel_shortcuts = [
+                { channel_id: '111111111111111111', shortcut: '{rules}' },
+                { channel_id: '222222222222222222', shortcut: '{general}' }
+            ];
+            console.log('Original:', channelTest);
+            console.log('Formatted:', applyMarkdownFormatting(channelTest));
+            console.log('Expected: انضم لروم <#111111111111111111> وروم <#222222222222222222>');
+        }
+        
+        // Uncomment to test in browser console
+        // testAllMarkdownFormatting();
     </script>
 </body>
 </html>
