@@ -1525,88 +1525,94 @@
             updateChatPreview();
         });
 
-        function updateChatPreview() {
-            let previewText = chatMessage.text;
+        function applyMarkdownFormatting(text) {
+            let result = text;
 
             // Apply mention replacement with space-protected regex boundaries
             if (chatMessage.mention.enabled && chatMessage.mention.trigger) {
                 const mentionRegex = new RegExp(`(?<=^|\\s)${chatMessage.mention.trigger}(?=\\s|$)`, 'g');
-                previewText = previewText.replace(mentionRegex, '@member');
+                result = result.replace(mentionRegex, '@member');
             }
 
             // Apply owner mention replacement with space-protected regex boundaries
             if (chatMessage.owner.enabled && chatMessage.owner.trigger) {
                 const ownerRegex = new RegExp(`(?<=^|\\s)${chatMessage.owner.trigger}(?=\\s|$)`, 'g');
-                previewText = previewText.replace(ownerRegex, '@owner');
+                result = result.replace(ownerRegex, '@owner');
             }
 
             // Apply server mention replacement with space-protected regex boundaries
             if (chatMessage.server.enabled && chatMessage.server.trigger) {
                 const serverRegex = new RegExp(`(?<=^|\\s)${chatMessage.server.trigger}(?=\\s|$)`, 'g');
-                previewText = previewText.replace(serverRegex, '@server');
+                result = result.replace(serverRegex, '@server');
             }
 
             // Apply header formatting with space-protected regex boundaries
             if (chatMessage.header.enabled && chatMessage.header.trigger) {
                 const headerRegex = new RegExp(`(?<=^|\\s)${chatMessage.header.trigger}(?=\\s|$)`, 'g');
-                previewText = previewText.replace(headerRegex, `# ${chatMessage.header.trigger}`);
+                result = result.replace(headerRegex, `# ${chatMessage.header.trigger}`);
             }
 
             // Apply bold formatting with space-protected regex boundaries
             if (chatMessage.bold.enabled && chatMessage.bold.trigger) {
                 const boldRegex = new RegExp(`(?<=^|\\s)${chatMessage.bold.trigger}(?=\\s|$)`, 'g');
-                previewText = previewText.replace(boldRegex, `**${chatMessage.bold.trigger}**`);
+                result = result.replace(boldRegex, `**${chatMessage.bold.trigger}**`);
             }
 
             // Apply italic formatting with space-protected regex boundaries
             if (chatMessage.italic.enabled && chatMessage.italic.trigger) {
                 const italicRegex = new RegExp(`(?<=^|\\s)${chatMessage.italic.trigger}(?=\\s|$)`, 'g');
-                previewText = previewText.replace(italicRegex, `*${chatMessage.italic.trigger}*`);
+                result = result.replace(italicRegex, `*${chatMessage.italic.trigger}*`);
             }
 
             // Apply underline formatting with space-protected regex boundaries
             if (chatMessage.underline.enabled && chatMessage.underline.trigger) {
                 const underlineRegex = new RegExp(`(?<=^|\\s)${chatMessage.underline.trigger}(?=\\s|$)`, 'g');
-                previewText = previewText.replace(underlineRegex, `__${chatMessage.underline.trigger}__`);
+                result = result.replace(underlineRegex, `__${chatMessage.underline.trigger}__`);
             }
 
             // Apply strikethrough formatting with space-protected regex boundaries
             if (chatMessage.strikethrough.enabled && chatMessage.strikethrough.trigger) {
                 const strikethroughRegex = new RegExp(`(?<=^|\\s)${chatMessage.strikethrough.trigger}(?=\\s|$)`, 'g');
-                previewText = previewText.replace(strikethroughRegex, `~~${chatMessage.strikethrough.trigger}~~`);
+                result = result.replace(strikethroughRegex, `~~${chatMessage.strikethrough.trigger}~~`);
             }
 
             // Apply spoiler formatting with space-protected regex boundaries
             if (chatMessage.spoiler.enabled && chatMessage.spoiler.trigger) {
                 const spoilerRegex = new RegExp(`(?<=^|\\s)${chatMessage.spoiler.trigger}(?=\\s|$)`, 'g');
-                previewText = previewText.replace(spoilerRegex, `||${chatMessage.spoiler.trigger}||`);
+                result = result.replace(spoilerRegex, `||${chatMessage.spoiler.trigger}||`);
             }
 
             // Apply quote formatting with space-protected regex boundaries
             if (chatMessage.quote.enabled && chatMessage.quote.trigger) {
                 const quoteRegex = new RegExp(`(?<=^|\\s)${chatMessage.quote.trigger}(?=\\s|$)`, 'g');
-                previewText = previewText.replace(quoteRegex, `> ${chatMessage.quote.trigger}`);
+                result = result.replace(quoteRegex, `> ${chatMessage.quote.trigger}`);
             }
 
             // Apply code formatting with space-protected regex boundaries
             if (chatMessage.code.enabled && chatMessage.code.trigger) {
                 const codeRegex = new RegExp(`(?<=^|\\s)${chatMessage.code.trigger}(?=\\s|$)`, 'g');
-                previewText = previewText.replace(codeRegex, `\`${chatMessage.code.trigger}\``);
+                result = result.replace(codeRegex, `\`${chatMessage.code.trigger}\``);
             }
 
             // Apply count replacement with space-protected regex boundaries
             if (chatMessage.count.enabled && chatMessage.count.trigger) {
                 const countRegex = new RegExp(`(?<=^|\\s)${chatMessage.count.trigger}(?=\\s|$)`, 'g');
-                previewText = previewText.replace(countRegex, '123');
+                result = result.replace(countRegex, '{count}');
             }
 
             // Apply channel shortcuts with space-protected regex boundaries
             chatMessage.channel_shortcuts.forEach(shortcut => {
                 if (shortcut.shortcut && shortcut.channel_id) {
                     const channelRegex = new RegExp(`(?<=^|\\s)${shortcut.shortcut}(?=\\s|$)`, 'g');
-                    previewText = previewText.replace(channelRegex, `<#${shortcut.channel_id}>`);
+                    result = result.replace(channelRegex, `<#${shortcut.channel_id}>`);
                 }
             });
+
+            return result;
+        }
+
+        function updateChatPreview() {
+            let previewText = applyMarkdownFormatting(chatMessage.text);
 
             // Apply Discord-style formatting for preview with full Markdown support
             let htmlPreview = parseDiscordMarkdown(previewText);
@@ -2024,7 +2030,7 @@
                     show: imageLayers.show_canvas_text
                 },
                 chat_message: {
-                    text: document.getElementById('chat-message-text').value,
+                    text: applyMarkdownFormatting(document.getElementById('chat-message-text').value),
                     mention: {
                         enabled: document.getElementById('toggle-mention').checked,
                         trigger: document.getElementById('mention-trigger').value
